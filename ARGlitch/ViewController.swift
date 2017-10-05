@@ -16,6 +16,7 @@ class ViewController: UIViewController, ARSessionDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        webView.customUserAgent = "ARGlitch-!ARKit!"
         view.insertSubview(webView, at: 0)
         reload()
         session.delegate = self

@@ -1,0 +1,10 @@
+{
+  "worlds": {
+    "test": {
+      "entities": {
+        "box1": {"position": {"x": 0, "y": 0, "z": -5}, "color": "green"},
+        "box2": {"position": {"x": 3, "y": 0, "z": -4}, "color": "blue"}
+      }
+    }
+  }
+}

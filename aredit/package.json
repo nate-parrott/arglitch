@@ -1,0 +1,23 @@
+{
+  "name": "aredit",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "aframe": "^0.7.0",
+    "aframe-extras": "^3.12.3",
+    "aframe-react": "^4.3.0",
+    "create-react-class": "^15.6.2",
+    "firebase": "^4.5.0",
+    "query-string": "^5.0.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-hammerjs": "git+https://github.com/pista329/react-hammerjs.git",
+    "react-scripts": "1.0.14"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
