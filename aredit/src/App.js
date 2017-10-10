@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import AFRAME from 'aframe';
+// import AFRAME from 'aframe';
 import {Entity, Scene} from 'aframe-react';
 import { initAR, AR_AVAILABLE } from './ar';
-import Hammer from 'react-hammerjs';
-import { Matrix4, Euler } from 'three';
+import { Matrix4 } from 'three';
 import { radToDeg, degToRad } from './util';
+import TouchRecognizer from './TouchRecognizer';
 
 if (AR_AVAILABLE) {
   initAR();
@@ -45,15 +44,13 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Hammer options={hammerOptions} onPress={this.onPress.bind(this)} onPressUp={this.onPressUp.bind(this)} onPanStart={this.onPanStart.bind(this)} onPan={this.onPan.bind(this)} onPanEnd={this.onPanEnd.bind(this)}>
-          <div>
-            <Scene>
-              <Camera onSelectionChanged={(sel) => this.changeSelection(sel)} onCameraNode={(n) => this.cameraNode = n} draggedObjects={this.renderDraggedObjects()} onCameraOffsetNode={(n) => this.cameraOffsetNode = n} offsetPosition={this.state.offsetPosition} offsetRotation={this.state.offsetRotation} />
-              { this.renderEntities() }
-              <Floor />
-            </Scene> 
-          </div>
-        </Hammer>
+        <TouchRecognizer onTouchesBegan={this.startDrag.bind(this)} onTouchesEnded={this.finishDrag.bind(this)} onPan={this.onPan.bind(this)} onScale={this.onScale.bind(this)}>
+          <Scene>
+            <Camera onSelectionChanged={(sel) => this.changeSelection(sel)} onCameraNode={(n) => this.cameraNode = n} draggedObjects={this.renderDraggedObjects()} onCameraOffsetNode={(n) => this.cameraOffsetNode = n} offsetPosition={this.state.offsetPosition} offsetRotation={this.state.offsetRotation} />
+            { this.renderEntities() }
+            <Floor />
+          </Scene>
+        </TouchRecognizer>
       </div>
     );
   }
@@ -78,9 +75,7 @@ class App extends Component {
     return this.worldRef.child('entities').child(id);
   }
   // DRAGGING:
-  onPress(e) {
-    console.log('press down')
-    
+  startDrag() {    
     if (this.state.selection) {
       // start a drag:
       let drags = this.state.selection.split(' ').map((id) => {
@@ -99,9 +94,6 @@ class App extends Component {
       });
       this.setState({drags: drags});
     }
-  }
-  onPressUp(e) {
-    this.finishDrag();
   }
   finishDrag() {
     for (let drag of this.state.drags) {      
@@ -123,27 +115,45 @@ class App extends Component {
       return <AREntity key={drag.id} id={drag.id} value={val} selected={true} dragState={drag} />;
     });
   }
-  // PANNING:
-  onPanStart(e) {
-    this.prevPanDelta = {x: 0, y: 0};
-  }
-  onPan(e) {
-    let panDelta = {x: e.deltaX, y: e.deltaY};
-    let forwardMotion = (panDelta.y - this.prevPanDelta.y) * 0.02;
+  // EVENT HANDLING:
+  onPan(delta) {
+    let forwardMotion = delta.y * 0.02;
     // for now, assume world rotation is only on the y axis:
     let angle = this.cameraNode.object3D.getWorldRotation().y;
     let dx = Math.sin(angle) * forwardMotion;
     let dz = Math.cos(angle) * forwardMotion;
-    if (AR_AVAILABLE) {
-      this.setState((state) => {
-        let newPos = {x: state.offsetPosition.x + dx, y: state.offsetPosition.y, z: state.offsetPosition.z + dz};
-        return {...state, offsetPosition: newPos};
-      });
-    }
-    this.prevPanDelta = panDelta;
+    let rotateY = AR_AVAILABLE ? delta.x * -0.2 : 0;
+    // do an optimistic, direct update for performance:
+    
+    let cameraObject3D = this.cameraNode.object3D;
+    cameraObject3D.translateX(dx);
+    cameraObject3D.translateZ(dz);
+    cameraObject3D.rotateY(degToRad(rotateY));
+    
+    // update the canonical state:
+    this.setState((state) => {
+      let newPos = {x: state.offsetPosition.x + dx, y: state.offsetPosition.y, z: state.offsetPosition.z + dz};
+      let newRot = {...state.offsetRotation, y: state.offsetRotation.y + rotateY};
+      return {offsetPosition: newPos, offsetRotation: newRot};
+    });
   }
-  onPanEnd(e) {
-    this.finishDrag();
+  // onPan(e) {
+  //   let panDelta = {x: e.deltaX, y: e.deltaY};
+  //   let forwardMotion = (panDelta.y - this.prevPanDelta.y) * 0.02;
+  //   // for now, assume world rotation is only on the y axis:
+  //   let angle = this.cameraNode.object3D.getWorldRotation().y;
+  //   let dx = Math.sin(angle) * forwardMotion;
+  //   let dz = Math.cos(angle) * forwardMotion;
+  //   if (AR_AVAILABLE) {
+  //     this.setState((state) => {
+  //       let newPos = {x: state.offsetPosition.x + dx, y: state.offsetPosition.y, z: state.offsetPosition.z + dz};
+  //       return {...state, offsetPosition: newPos};
+  //     });
+  //   }
+  //   this.prevPanDelta = panDelta;
+  // }
+  onScale(scale) {
+    
   }
 }
 
