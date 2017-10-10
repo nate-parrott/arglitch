@@ -5,7 +5,7 @@ import AFRAME from 'aframe';
 import {Entity, Scene} from 'aframe-react';
 import { initAR, AR_AVAILABLE } from './ar';
 import Hammer from 'react-hammerjs';
-import { Matrix4 } from 'three';
+import { Matrix4, Euler } from 'three';
 import { radToDeg, degToRad } from './util';
 
 if (AR_AVAILABLE) {
@@ -86,12 +86,11 @@ class App extends Component {
       let drags = this.state.selection.split(' ').map((id) => {
         let object3D = this.domNodeForEntity(id).object3D;
         let cameraObject3D = this.cameraNode.object3D;
+        cameraObject3D.updateMatrixWorld();
         let worldToLocal = new Matrix4().getInverse(cameraObject3D.matrixWorld);
         object3D.applyMatrix(worldToLocal);
-        // object3D.rotation.reorder('XYZ');
         let pos = object3D.getWorldPosition();
         let rot = object3D.getWorldRotation();
-        rot.reorder('XYZ');
         return {
           id: id,
           posInCameraSpace: {x: pos.x, y: pos.y, z: pos.z},
@@ -105,11 +104,12 @@ class App extends Component {
     this.finishDrag();
   }
   finishDrag() {
-    for (let drag of this.state.drags) {
+    for (let drag of this.state.drags) {      
       let object3D = this.domNodeForEntity(drag.id).object3D;
+      object3D.updateMatrixWorld();
       let pos = object3D.getWorldPosition();
       let rot = object3D.getWorldRotation();
-      rot.reorder('XYZ');
+      // rot.reorder('XYZ');
       let ref = this.firebaseRefForEntity(drag.id);
       ref.child('position').set({x: pos.x, y: pos.y, z: pos.z});
       ref.child('rotation').set({x: radToDeg(rot.x), y: radToDeg(rot.y), z: radToDeg(rot.z)});
