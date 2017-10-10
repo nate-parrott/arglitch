@@ -49,6 +49,7 @@ class App extends Component {
             <Camera onSelectionChanged={(sel) => this.changeSelection(sel)} onCameraNode={(n) => this.cameraNode = n} draggedObjects={this.renderDraggedObjects()} onCameraOffsetNode={(n) => this.cameraOffsetNode = n} offsetPosition={this.state.offsetPosition} offsetRotation={this.state.offsetRotation} />
             { this.renderEntities() }
             <Floor />
+            <Entity primitive='a-sky' src="/sky.png"/>
           </Scene>
         </TouchRecognizer>
       </div>
@@ -137,21 +138,6 @@ class App extends Component {
       return {offsetPosition: newPos, offsetRotation: newRot};
     });
   }
-  // onPan(e) {
-  //   let panDelta = {x: e.deltaX, y: e.deltaY};
-  //   let forwardMotion = (panDelta.y - this.prevPanDelta.y) * 0.02;
-  //   // for now, assume world rotation is only on the y axis:
-  //   let angle = this.cameraNode.object3D.getWorldRotation().y;
-  //   let dx = Math.sin(angle) * forwardMotion;
-  //   let dz = Math.cos(angle) * forwardMotion;
-  //   if (AR_AVAILABLE) {
-  //     this.setState((state) => {
-  //       let newPos = {x: state.offsetPosition.x + dx, y: state.offsetPosition.y, z: state.offsetPosition.z + dz};
-  //       return {...state, offsetPosition: newPos};
-  //     });
-  //   }
-  //   this.prevPanDelta = panDelta;
-  // }
   onScale(scale) {
     
   }
@@ -187,7 +173,9 @@ let Camera = ({onSelectionChanged, onCameraNode, onCameraOffsetNode, draggedObje
       <Entity key='camera' camera wasd-controls _ref={onCameraNode} {...props}>
         {draggedObjects}
         <Entity raycaster={{objects: '[data-entity-id]', far: handDist, direction: {x: 0, y: 0, z: -1}}} events={raycasterHandlers} />
-        <Entity primitive="a-sphere" material={{color: '#f48'}} position={{x: 0, y: 0, z: -handDist}} scale={{x: 0.05, y: 0.05, z: 0.05}} />
+        <Entity position={{x: 0, y: 0, z: -handDist}} rotation={{x: 45, y: 0, z: 0}}>
+          <Entity obj-model="obj: url(/mickeyhand.obj)" material={{color: '#eee'}} scale={{x: 0.3, y: 0.3, z: 0.3}} rotation={{x: 0, y: 90, z: 0}} />
+        </Entity>
       </Entity>
     </Entity>
   )
