@@ -36,7 +36,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <TouchRecognizer onTouchesBegan={this.startDrag.bind(this)} onTouchesEnded={this.finishDrag.bind(this)} onPan={this.onPan.bind(this)} onScale={this.onScale.bind(this)}>
+        <TouchRecognizer onTouchesBegan={this.startDrag.bind(this)} onTouchesEnded={this.finishDrag.bind(this)} onPan={this.onPan.bind(this)} onScale={this.onScale.bind(this)} onTwoFingerPan={this.onTwoFingerPan.bind(this)}>
           <Scene>
             <Camera onSelectionChanged={(sel) => this.changeSelection(sel)} onCameraNode={(n) => this.cameraNode = n} draggedObjects={this.renderDraggedObjects()} offsetPosition={this.state.offsetPosition} offsetRotation={this.state.offsetRotation} />
             { this.renderEntities() }
@@ -137,6 +137,20 @@ class App extends Component {
     this.setState(({gestureScale}) => {
       return {gestureScale: Math.min(100, Math.max(0.1, gestureScale * scale))};
     });
+  }
+  onTwoFingerPan(delta) {
+    alert(delta);
+    let k = 0.02;
+    this.setState(({drags}) => {
+      let newDrags = drags.map((drag) => {
+        let {x,y,z} = drag.posInCameraSpace;
+        return {...drag, posInCameraSpace: {x: x + delta.x * k, y: y - delta.y * k, z: z}}
+      });
+      return {drags: newDrags};
+    });
+  }
+  onRotate(angle) {
+    
   }
 }
 

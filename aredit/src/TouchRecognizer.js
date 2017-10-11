@@ -22,9 +22,14 @@ export default class TouchRecognizer extends Component {
     e.preventDefault();
     let { centroid, distance } = this.computeProps(e.touches);
     if (centroid && this.lastCentroid) {
-      this.props.onPan({x: centroid.x - this.lastCentroid.x, y: centroid.y - this.lastCentroid.y});
+      let delta = {x: centroid.x - this.lastCentroid.x, y: centroid.y - this.lastCentroid.y};
+      if (e.touches.length === 1) {
+        this.props.onPan(delta);
+      } else if (e.touches.length === 2) {
+        this.props.onTwoFingerPan(delta);
+      }
     }
-    if (distance && this.lastDistance) {
+    if (e.touches.length === 2 && distance && this.lastDistance) {
       this.props.onScale(distance / this.lastDistance);
     }
     this.lastCentroid = centroid;
