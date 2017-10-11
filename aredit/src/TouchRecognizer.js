@@ -40,6 +40,9 @@ export default class TouchRecognizer extends Component {
     if (e.touches.length === 0) {
       this.props.onTouchesEnded();
     }
+    let { centroid, distance } = this.computeProps(e.touches);
+    this.lastCentroid = centroid;
+    this.lastDistance = distance;
   }
   reset() {
     this.lastCentroid = null;
