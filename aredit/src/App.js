@@ -4,32 +4,24 @@ import './App.css';
 import {Entity, Scene} from 'aframe-react';
 import { initAR, AR_AVAILABLE } from './ar';
 import { Matrix4 } from 'three';
-import { radToDeg, degToRad } from './util';
+import { radToDeg, degToRad, scaleAllAxes } from './util';
 import TouchRecognizer from './TouchRecognizer';
 
 if (AR_AVAILABLE) {
   initAR();
 }
 
-let hammerOptions = {
-    touchAction:'compute',
-    recognizers: {
-        press: {
-          time: 1,
-          threshold: 9999999
-        }
-    }
-};
-
-if (AR_AVAILABLE) {
-  hammerOptions.recognizers.pan = {
-  }
-}
-
 class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {world: {}, selection: "", drags: [], offsetPosition: {x: 0, y: 0, z: 0}, offsetRotation: {x: 0, y: 0, z: 0}};
+    this.state = {
+      world: {}, 
+      selection: "", 
+      drags: [], 
+      offsetPosition: {x: 0, y: 0, z: 0}, 
+      offsetRotation: {x: 0, y: 0, z: 0},
+      gestureScale: 1 // how much have we scaled the objects we're currently dragging?
+    };
     this.cameraNode = null;
     this.cameraOffsetNode = null;
     this.prevPanDelta = null;
@@ -46,7 +38,7 @@ class App extends Component {
       <div className="App">
         <TouchRecognizer onTouchesBegan={this.startDrag.bind(this)} onTouchesEnded={this.finishDrag.bind(this)} onPan={this.onPan.bind(this)} onScale={this.onScale.bind(this)}>
           <Scene>
-            <Camera onSelectionChanged={(sel) => this.changeSelection(sel)} onCameraNode={(n) => this.cameraNode = n} draggedObjects={this.renderDraggedObjects()} onCameraOffsetNode={(n) => this.cameraOffsetNode = n} offsetPosition={this.state.offsetPosition} offsetRotation={this.state.offsetRotation} />
+            <Camera onSelectionChanged={(sel) => this.changeSelection(sel)} onCameraNode={(n) => this.cameraNode = n} draggedObjects={this.renderDraggedObjects()} offsetPosition={this.state.offsetPosition} offsetRotation={this.state.offsetRotation} />
             { this.renderEntities() }
             <Floor />
             <Entity primitive='a-sky' src="/sky.png"/>
@@ -93,19 +85,22 @@ class App extends Component {
           rotationInCameraSpace: {x: radToDeg(rot.x), y: radToDeg(rot.y), z: radToDeg(rot.z)}
         };
       });
-      this.setState({drags: drags});
+      this.setState({drags: drags, gestureScale: 1});
     }
   }
   finishDrag() {
-    for (let drag of this.state.drags) {      
+    for (let drag of this.state.drags) {
+      let val = this.state.world.entities[drag.id];  
       let object3D = this.domNodeForEntity(drag.id).object3D;
       object3D.updateMatrixWorld();
       let pos = object3D.getWorldPosition();
       let rot = object3D.getWorldRotation();
+      let scale = scaleAllAxes(val.scale || {x: 1, y: 1, z: 1}, this.state.gestureScale || 1);
       // rot.reorder('XYZ');
       let ref = this.firebaseRefForEntity(drag.id);
       ref.child('position').set({x: pos.x, y: pos.y, z: pos.z});
       ref.child('rotation').set({x: radToDeg(rot.x), y: radToDeg(rot.y), z: radToDeg(rot.z)});
+      ref.child('scale').set(scale);
     }
     this.setState({drags: []});
   }
@@ -113,7 +108,7 @@ class App extends Component {
     let entities = this.state.world.entities || {};
     return (this.state.drags || []).map((drag) => {
       let val = entities[drag.id];
-      return <AREntity key={drag.id} id={drag.id} value={val} selected={true} dragState={drag} />;
+      return <AREntity key={drag.id} id={drag.id} value={val} selected={true} dragState={drag} gestureScale={this.state.gestureScale} />;
     });
   }
   // EVENT HANDLING:
@@ -124,12 +119,12 @@ class App extends Component {
     let dx = Math.sin(angle) * forwardMotion;
     let dz = Math.cos(angle) * forwardMotion;
     let rotateY = AR_AVAILABLE ? delta.x * -0.2 : 0;
-    // do an optimistic, direct update for performance:
-    
-    let cameraObject3D = this.cameraNode.object3D;
-    cameraObject3D.translateX(dx);
-    cameraObject3D.translateZ(dz);
-    cameraObject3D.rotateY(degToRad(rotateY));
+    // // do an optimistic, direct update for performance:
+    //
+    // let cameraObject3D = this.cameraNode.object3D;
+    // cameraObject3D.translateX(dx);
+    // cameraObject3D.translateZ(dz);
+    // cameraObject3D.rotateY(degToRad(rotateY));
     
     // update the canonical state:
     this.setState((state) => {
@@ -139,19 +134,22 @@ class App extends Component {
     });
   }
   onScale(scale) {
-    
+    this.setState(({gestureScale}) => {
+      return {gestureScale: Math.min(100, Math.max(0.1, gestureScale * scale))};
+    });
   }
 }
 
-let AREntity = ({id, value, selected, dragState}) => {
+let AREntity = ({id, value, selected, dragState, gestureScale}) => {
   let defaultSelectionColor = '#37f';
   let color = selected ? (value.selectedColor || defaultSelectionColor) : value.color;
   let position = dragState ? dragState.posInCameraSpace : value.position;
   let rotation = dragState ? dragState.rotationInCameraSpace : value.rotation;
-  return <Entity data-entity-id={id} geometry={{primitive: 'box'}} material={{color: color}} position={position} rotation={rotation} />;
+  let scale = scaleAllAxes(value.scale || {x: 1, y: 1, z: 1}, gestureScale || 1);
+  return <Entity data-entity-id={id} geometry={{primitive: 'box'}} material={{color: color}} position={position} rotation={rotation} scale={scale}  />;
 };
 
-let Camera = ({onSelectionChanged, onCameraNode, onCameraOffsetNode, draggedObjects, offsetPosition, offsetRotation}) => {
+let Camera = ({onSelectionChanged, onCameraNode, onCameraRotation, draggedObjects, offsetPosition, offsetRotation}) => {
   let handDist = 2;
   let onRaycast = (e) => {
     let intersectedIds = e.target.components.raycaster.intersectedEls.map((el) => el.getAttribute('data-entity-id')).join(' ');
@@ -161,20 +159,25 @@ let Camera = ({onSelectionChanged, onCameraNode, onCameraOffsetNode, draggedObje
     "raycaster-intersection": onRaycast,
     "raycaster-intersection-cleared": onRaycast
   }
-  let props = {};
+  
+  let camProps = {};
+  let posProps = {};
   if (AR_AVAILABLE) {
-    props['ar-driven'] = true;
+    camProps['ar-driven'] = {rotation: true};
+    posProps['ar-driven'] = {position: true};
   } else {
-    props['look-controls'] = true;
+    camProps['look-controls'] = true;
   }
   
   return (
-    <Entity key='camera-offset' rotation={offsetRotation} position={offsetPosition} _ref={onCameraOffsetNode}>
-      <Entity key='camera' camera wasd-controls _ref={onCameraNode} {...props}>
-        {draggedObjects}
-        <Entity raycaster={{objects: '[data-entity-id]', far: handDist, direction: {x: 0, y: 0, z: -1}}} events={raycasterHandlers} />
-        <Entity position={{x: 0, y: 0, z: -handDist}} rotation={{x: 45, y: 0, z: 0}}>
-          <Entity obj-model="obj: url(/mickeyhand.obj)" material={{color: '#eee'}} scale={{x: 0.3, y: 0.3, z: 0.3}} rotation={{x: 0, y: 90, z: 0}} />
+    <Entity position={offsetPosition}>
+      <Entity key='ar-position' {...posProps}>
+        <Entity key='camera' camera wasd-controls _ref={onCameraNode} {...camProps}>
+          {draggedObjects}
+          <Entity raycaster={{objects: '[data-entity-id]', far: handDist, direction: {x: 0, y: 0, z: -1}}} events={raycasterHandlers} />
+          <Entity position={{x: 0, y: 0, z: -handDist}} rotation={{x: 45, y: 0, z: 0}}>
+            <Entity obj-model="obj: url(/mickeyhand.obj)" material={{color: '#eee'}} scale={{x: 0.3, y: 0.3, z: 0.3}} rotation={{x: 0, y: 90, z: 0}} />
+          </Entity>
         </Entity>
       </Entity>
     </Entity>
