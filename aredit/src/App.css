@@ -6,6 +6,10 @@ body {
   text-align: center;
 }
 
+body, #root, .App {
+  height: 100%;
+}
+
 .App-logo {
   animation: App-logo-spin infinite 20s linear;
   height: 80px;
