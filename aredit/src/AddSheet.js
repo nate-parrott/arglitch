@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 let NewObjects = [
   {
     text: 'cube',
-    template: {color: 'red', type: 'cube'}
+    template: {color: 'red', primitive: 'box'}
   },
   {
     text: 'sphere',
@@ -11,15 +11,15 @@ let NewObjects = [
   },
   {
     text: 'cylinder',
-    template: {color: 'red', type: 'cylinder'}
+    template: {color: 'red', primitive: 'cylinder'}
   },
   {
     text: 'cone',
-    template: {color: 'red', type: 'cone'}
+    template: {color: 'red', primitive: 'cone'}
   },
   {
     text: 'donut',
-    template: {color: 'red', type: 'torus'}
+    template: {color: 'red', primitive: 'torus'}
   }
 ]
 

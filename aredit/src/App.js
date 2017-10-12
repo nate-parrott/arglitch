@@ -59,7 +59,7 @@ class App extends Component {
     if (this.state.selection !== sel) this.setState({selection: sel});
   }
   renderEntities() {
-    let entities = this.state.world.entities || {};
+    let entities = (this.state.world || {}).entities || {};
     let selectedIds = this.state.selection.split(' ');
     let hideIds = (this.state.drags || []).map((d) => d.id);
     return Object.keys(entities).map((key) => {
@@ -113,7 +113,7 @@ class App extends Component {
     this.setState({drags: []});
   }
   renderDraggedObjects() {
-    let entities = this.state.world.entities || {};
+    let entities = (this.state.world || {}).entities || {};
     return (this.state.drags || []).map((drag) => {
       let val = entities[drag.id];
       return <AREntity key={drag.id} id={drag.id} value={val} selected={true} dragState={drag} gestureScale={this.state.gestureScale} />;
@@ -204,7 +204,8 @@ let AREntity = ({id, value, selected, dragState, gestureScale}) => {
   let position = dragState ? dragState.posInCameraSpace : value.position;
   let rotation = dragState ? dragState.rotationInCameraSpace : value.rotation;
   let scale = scaleAllAxes(value.scale || {x: 1, y: 1, z: 1}, gestureScale || 1);
-  return <Entity data-entity-id={id} geometry={{primitive: 'box'}} material={{color: color}} position={position} rotation={rotation} scale={scale}  />;
+  let geometry = {primitive: value.primitive || 'box'};
+  return <Entity data-entity-id={id} geometry={geometry} material={{color: color}} position={position} rotation={rotation} scale={scale}  />;
 };
 
 let Camera = ({onSelectionChanged, onCameraNode, onCameraRotation, draggedObjects, offsetPosition, offsetRotation, onHandNode}) => {
