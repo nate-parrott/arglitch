@@ -8,8 +8,11 @@ import { radToDeg, degToRad, scaleAllAxes, vecToAFramePosition, vecToAFrameRotat
 import TouchRecognizer from './TouchRecognizer';
 import Controls from './Controls';
 import Overlay from './Overlay';
-import PropertyEditor from './PropertyEditor';
+import EntityEditor from './EntityEditor';
 import AddSheet from './AddSheet';
+import World from './World';
+import { clampScale } from './util';
+import ImageUploader from './ImageUploader';
 
 if (AR_AVAILABLE) {
   initAR();
@@ -25,7 +28,8 @@ class App extends Component {
       offsetPosition: {x: 0, y: 0, z: 0}, 
       offsetRotation: {x: 0, y: 0, z: 0},
       gestureScale: 1, // how much have we scaled the objects we're currently dragging?
-      overlayFunctions: []
+      overlayFunctions: [],
+      shadowMapPos: {x: 0, z: 0}
     };
     this.cameraNode = null;
     this.cameraOffsetNode = null;
@@ -37,8 +41,14 @@ class App extends Component {
     this.worldRef.on('value', (snapshot) => {
       this.setState({world: snapshot.val()});
     });
+    this.shadowMapUpdateLoop();
+  }
+  componentWillUnmount() {
+    if (this._shadowMapTimeout) clearTimeout(this._shadowMapTimeout);
+    delete this._shadowMapTimeout;
   }
   render() {
+    return <ImageUploader storage={this.props.storage} />;
     return (
       <div className="App">
         <Controls showEditWorldButton={!this.state.selection} onEditObject={this.editSelectedObject.bind(this)} onAdd={this.addObject.bind(this)}>
@@ -46,8 +56,7 @@ class App extends Component {
             <Scene>
               <Camera onSelectionChanged={(sel) => this.changeSelection(sel)} onCameraNode={(n) => this.cameraNode = n} draggedObjects={this.renderDraggedObjects()} offsetPosition={this.state.offsetPosition} offsetRotation={this.state.offsetRotation} onHandNode={(n) => this.handNode = n} />
               { this.renderEntities() }
-              <Floor />
-              <Entity primitive='a-sky' src="/sky.png"/>
+              <World shadowMapPos={this.state.shadowMapPos} />
             </Scene>
           </TouchRecognizer>
         </Controls>
@@ -74,6 +83,14 @@ class App extends Component {
   }
   firebaseRefForEntity(id) {
     return this.worldRef.child('entities').child(id);
+  }
+  cameraPosition() {
+    let arPos = window.lastARPos || {x: 0, y: 0, z: 0};
+    return {
+      x: arPos.x + this.state.offsetPosition.x,
+      y: arPos.y + this.state.offsetPosition.y,
+      z: arPos.z + this.state.offsetPosition.z
+    }
   }
   // DRAGGING:
   startDrag() {    
@@ -143,7 +160,7 @@ class App extends Component {
   }
   onScale(scale) {
     this.setState(({gestureScale}) => {
-      return {gestureScale: Math.min(100, Math.max(0.1, gestureScale * scale))};
+      return {gestureScale: clampScale(gestureScale * scale)};
     });
   }
   onTwoFingerPan(delta) {
@@ -177,11 +194,18 @@ class App extends Component {
   dismissOverlays() {
     this.setState({overlayFunctions: []});
   }
+  pushOverlay(renderFunc) {
+    this.setState({overlayFunctions: this.state.overlayFunctions.concat([renderFunc])});
+  }
   // CONTROL ACTIONS:
   editSelectedObject() {
     if (this.state.selection) {
       let id = this.state.selection.split(' ')[0];
-      let renderEditor = () => <PropertyEditor />;
+      let entityRef = this.worldRef.child('entities').child(id);
+      let getEntityValue = () => this.state.world.entities[id];
+      let renderEditor = () => {
+        return <EntityEditor pushOverlay={this.pushOverlay.bind(this)} id={id} entityRef={entityRef} getEntityValue={getEntityValue} />;
+      };
       this.setState({overlayFunctions: [renderEditor]})
     }
   }
@@ -196,6 +220,14 @@ class App extends Component {
     let renderAddSheet = () => <AddSheet worldRef={this.worldRef} onDone={this.dismissOverlays.bind(this)} getWorldPositionAndRotation={getWorldPositionAndRotation} />;
     this.setState({overlayFunctions: [renderAddSheet]});
   }
+  shadowMapUpdateLoop() {
+    if (this.cameraNode) {
+      this.cameraNode.object3D.updateMatrixWorld();
+      let cameraPos = this.cameraNode.object3D.getWorldPosition();
+      this.setState({shadowMapPos: {x: cameraPos.x, z: cameraPos.z}});
+    }
+    this._shadowMapTimeout = setTimeout(() => this.shadowMapUpdateLoop(), 500);
+  }
 }
 
 let AREntity = ({id, value, selected, dragState, gestureScale}) => {
@@ -205,7 +237,7 @@ let AREntity = ({id, value, selected, dragState, gestureScale}) => {
   let rotation = dragState ? dragState.rotationInCameraSpace : value.rotation;
   let scale = scaleAllAxes(value.scale || {x: 1, y: 1, z: 1}, gestureScale || 1);
   let geometry = {primitive: value.primitive || 'box'};
-  return <Entity data-entity-id={id} geometry={geometry} material={{color: color}} position={position} rotation={rotation} scale={scale}  />;
+  return <Entity data-entity-id={id} geometry={geometry} material={{color: color}} position={position} rotation={rotation} scale={scale} shadow={{receive: false}} />;
 };
 
 let Camera = ({onSelectionChanged, onCameraNode, onCameraRotation, draggedObjects, offsetPosition, offsetRotation, onHandNode}) => {
@@ -232,7 +264,7 @@ let Camera = ({onSelectionChanged, onCameraNode, onCameraRotation, draggedObject
     <Entity position={offsetPosition}>
       <Entity key='ar-position' {...posProps}>
         <Entity key='camera' camera wasd-controls _ref={onCameraNode} {...camProps}>
-          {draggedObjects}
+  {draggedObjects}
           <Entity raycaster={{objects: '[data-entity-id]', far: handDist, direction: {x: 0, y: 0, z: -1}}} events={raycasterHandlers} />
           <Entity position={{x: 0, y: 0, z: -handDist}} _ref={onHandNode}>
             <Entity rotation={{x: 45, y: 0, z: 0}}>
@@ -244,9 +276,5 @@ let Camera = ({onSelectionChanged, onCameraNode, onCameraRotation, draggedObject
     </Entity>
   )
 };
-
-let Floor = () => {
-  return <Entity primitive='a-plane' material={{src: '/grass.jpg', repeat: '200 200'}} position={{x: 0, y: -2, z: 0}} rotation={{x: -90, y: 0, z: 0}} scale={{ x: 1000, y: 1000, z: 1000 }} />;
-}
 
 export default App;

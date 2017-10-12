@@ -14,10 +14,11 @@ var config = {
    apiKey: "AIzaSyAViBcD9oDDPjWXSQ-z-Vc6Puvnkvzdbbs",
    authDomain: "ar-edit.firebaseapp.com",
    databaseURL: "https://ar-edit.firebaseio.com",
-   // storageBucket: "bucket.appspot.com"
+   storageBucket: "gs://ar-edit.appspot.com"
  };
 firebase.initializeApp(config);
 let db = firebase.database();
+let storage = firebase.storage();
 
-ReactDOM.render(<App identifier={identifier} database={db} />, document.getElementById('root'));
+ReactDOM.render(<App identifier={identifier} database={db} storage={storage} />, document.getElementById('root'));
 registerServiceWorker();

@@ -1,0 +1,11 @@
+
+.ImageUploader {
+  width: 5em;
+  height: 5em;
+  margin: 3em;
+  background-color: red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+}

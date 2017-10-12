@@ -1,0 +1,13 @@
+.StretchControl {
+  height: 30vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.StretchControl > div {
+  width: 80%;
+  text-align: center;
+}
+.StretchControl .icon {
+  font-size: 2em;
+}

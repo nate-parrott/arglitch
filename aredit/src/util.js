@@ -15,7 +15,8 @@ export let vecToAFramePosition = (vec) => {
   return {x: vec.x, y: vec.y, z: vec.z};
 }
 
-
 export let vecToAFrameRotation = (vec) => {
   return {x: radToDeg(vec.x), y: radToDeg(vec.y), z: radToDeg(vec.z)};
 }
+
+export let clampScale = (s) => Math.max(0.05, Math.min(500, s));
