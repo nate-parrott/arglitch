@@ -20,6 +20,10 @@ let NewObjects = [
   {
     text: 'donut',
     template: {color: 'red', primitive: 'torus'}
+  },
+  {
+    text: 'text',
+    template: {color: 'yellow', primitive: 'text', text: "Hello"}
   }
 ]
 

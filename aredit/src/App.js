@@ -13,6 +13,7 @@ import AddSheet from './AddSheet';
 import World from './World';
 import { clampScale } from './util';
 import ImageUploader from './ImageUploader';
+require('aframe-text-geometry-component');
 
 if (AR_AVAILABLE) {
   initAR();
@@ -48,7 +49,7 @@ class App extends Component {
     delete this._shadowMapTimeout;
   }
   render() {
-    return <ImageUploader storage={this.props.storage} />;
+    // return <ImageUploader storage={this.props.storage} />;
     return (
       <div className="App">
         <Controls showEditWorldButton={!this.state.selection} onEditObject={this.editSelectedObject.bind(this)} onAdd={this.addObject.bind(this)}>
@@ -236,8 +237,16 @@ let AREntity = ({id, value, selected, dragState, gestureScale}) => {
   let position = dragState ? dragState.posInCameraSpace : value.position;
   let rotation = dragState ? dragState.rotationInCameraSpace : value.rotation;
   let scale = scaleAllAxes(value.scale || {x: 1, y: 1, z: 1}, gestureScale || 1);
-  let geometry = {primitive: value.primitive || 'box'};
-  return <Entity data-entity-id={id} geometry={geometry} material={{color: color}} position={position} rotation={rotation} scale={scale} shadow={{receive: false}} />;
+  
+  let props = {};
+  if (value.primitive === 'text') {
+    props.geometry = {primitive: 'box'}; // text geo is loaded async, but raycaster crashes if we have a mesh with empty geometry; work around this by initializing with a box primitive (which will be instantiated immediately) and follow up by adding a text component
+    props['text-geometry'] = {value: value.text};
+  } else {
+    props.geometry = {primitive: value.primitive || 'box'};
+  }
+  
+  return <Entity data-entity-id={id} material={{color: color}} position={position} rotation={rotation} scale={scale} shadow={{receive: false}} {...props} />;
 };
 
 let Camera = ({onSelectionChanged, onCameraNode, onCameraRotation, draggedObjects, offsetPosition, offsetRotation, onHandNode}) => {

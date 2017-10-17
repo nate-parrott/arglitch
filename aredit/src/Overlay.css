@@ -50,3 +50,46 @@
   font-weight: bold;
   cursor: default;
 }
+
+.Overlay .NavBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+.Overlay .BackButtonContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.NavBarItem, .NavBar h2 {
+  font-size: 18px;
+}
+
+.NavBar h2 {
+  margin: 0;
+  opacity: 0.5;
+  text-transform: uppercase;
+}
+
+.NavBarButton {
+  font-weight: bold;
+  padding: 20px;
+  cursor: default;
+}
+
+.Overlay .NavBar .NavBarButton {
+  flex-basis: 20%;
+  flex-grow: 0;
+}
+
+.Overlay .NavBar h2 {
+  flex-grow: 1;
+}
+
+.Overlay .NavBarButton:last-child {
+  text-align: right;
+}

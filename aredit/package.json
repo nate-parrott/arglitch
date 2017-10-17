@@ -6,6 +6,7 @@
     "aframe": "^0.7.0",
     "aframe-extras": "^3.12.3",
     "aframe-react": "^4.3.0",
+    "aframe-text-geometry-component": "^0.5.1",
     "create-react-class": "^15.6.2",
     "firebase": "^4.5.0",
     "query-string": "^5.0.0",
