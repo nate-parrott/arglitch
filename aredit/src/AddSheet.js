@@ -23,7 +23,7 @@ let NewObjects = [
   },
   {
     text: 'text',
-    template: {color: 'yellow', primitive: 'text', text: "Hello"}
+    template: {color: 'yellow', primitive: 'text', text: "Text"}
   }
 ]
 

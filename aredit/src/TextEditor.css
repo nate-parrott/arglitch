@@ -1,0 +1,10 @@
+.TextEditor textarea {
+  width: 100%;
+  appearance: none;
+  font-family: inherit;
+  background-color: white;
+  font-size: 1em;
+  padding: 10px;
+  box-sizing: border-box;
+  height: 4em;
+}

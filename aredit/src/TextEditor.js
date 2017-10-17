@@ -11,12 +11,12 @@ export default class TextEditor extends Component {
     return (
       <div className='TextEditor'>
         <NavBar title="Edit Text" rightButton={<NavBarButton title="Done" onClick={this.done.bind(this)}/>} />
-        <p>OTHER FUN CONTENT</p>
-        <p>GOES HERE!</p>
+        <textarea ref={(n) => this.textAreaNode = n} value={this.state.text} onChange={(e) => this.setState({text: e.target.value})} />
       </div>
     )
   }
   done() {
-    // TODO
+    this.props.onSetText(this.state.text);
+    this.textAreaNode.blur();
   }
 }

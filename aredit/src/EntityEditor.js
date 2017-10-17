@@ -25,7 +25,7 @@ export default class EntityEditor extends Component {
   editText() {
     let text = this.props.getEntityValue().text;
     let onSetText = (text) => {
-      // TODO
+      this.props.entityRef.child('text').set(text || 'Text');
     }
     this.props.pushOverlay(() => <TextEditor onSetText={onSetText} initialText={text} />);
   }
