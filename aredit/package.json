@@ -15,6 +15,7 @@
     "react-fontawesome": "^1.6.1",
     "react-scripts": "1.0.14",
     "resize-image": "0.0.4",
+    "tinycolor2": "^1.4.1",
     "uuid": "^3.1.0"
   },
   "scripts": {

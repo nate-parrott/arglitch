@@ -13,6 +13,7 @@ import AddSheet from './AddSheet';
 import World from './World';
 import { clampScale } from './util';
 import ImageUploader from './ImageUploader';
+import ColorPicker, {ColorPickerDemo} from './ColorPicker';
 require('aframe-text-geometry-component');
 
 if (AR_AVAILABLE) {
@@ -37,18 +38,20 @@ class App extends Component {
     this.prevPanDelta = null;
   }
   componentDidMount() {
-    console.log(this.props.database.ref('worlds/' + this.props.identifier))
+    // console.log(this.props.database.ref('worlds/' + this.props.identifier))
     this.worldRef = this.props.database.ref('worlds/' + this.props.identifier);
     this.worldRef.on('value', (snapshot) => {
       this.setState({world: snapshot.val()});
     });
     this.shadowMapUpdateLoop();
+    // this.pushOverlay(() => <ColorPicker color='#f44' />);
   }
   componentWillUnmount() {
     if (this._shadowMapTimeout) clearTimeout(this._shadowMapTimeout);
     delete this._shadowMapTimeout;
   }
   render() {
+    return <ColorPickerDemo />;
     // return <ImageUploader storage={this.props.storage} />;
     return (
       <div className="App">

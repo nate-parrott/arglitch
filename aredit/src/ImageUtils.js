@@ -18,8 +18,8 @@ export let resizeImageToBlob = (image, maxDimension, callback) => {
   w *= scale;
   h *= scale;
   let cvs = document.createElement('canvas');
-  cvs.width = parseInt(w);
-  cvs.height = parseInt(h);
+  cvs.width = parseInt(w, 10);
+  cvs.height = parseInt(h, 10);
   let ctx = cvs.getContext('2d');
   ctx.drawImage(image, 0, 0, w, h);
   cvs.toBlob((blob) => {

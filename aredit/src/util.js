@@ -20,3 +20,12 @@ export let vecToAFrameRotation = (vec) => {
 }
 
 export let clampScale = (s) => Math.max(0.05, Math.min(500, s));
+
+export let loadImage = (src) => {
+  return new Promise((resolve, reject) => {
+    let img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => reject();
+    img.src = src; 
+  });
+}
