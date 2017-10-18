@@ -13,7 +13,7 @@ import AddSheet from './AddSheet';
 import World from './World';
 import { clampScale } from './util';
 import ImageUploader from './ImageUploader';
-import ColorPicker, {ColorPickerDemo} from './ColorPicker';
+// import ColorPicker, {ColorPickerDemo} from './ColorPicker';
 require('aframe-text-geometry-component');
 
 if (AR_AVAILABLE) {
@@ -51,7 +51,7 @@ class App extends Component {
     delete this._shadowMapTimeout;
   }
   render() {
-    return <ColorPickerDemo />;
+    // return <ColorPickerDemo />;
     // return <ImageUploader storage={this.props.storage} />;
     return (
       <div className="App">
@@ -148,14 +148,7 @@ class App extends Component {
     let dx = Math.sin(angle) * forwardMotion;
     let dz = Math.cos(angle) * forwardMotion;
     let rotateY = AR_AVAILABLE ? delta.x * -0.2 : 0;
-    // // do an optimistic, direct update for performance:
-    //
-    // let cameraObject3D = this.cameraNode.object3D;
-    // cameraObject3D.translateX(dx);
-    // cameraObject3D.translateZ(dz);
-    // cameraObject3D.rotateY(degToRad(rotateY));
     
-    // update the canonical state:
     this.setState((state) => {
       let newPos = {x: state.offsetPosition.x + dx, y: state.offsetPosition.y, z: state.offsetPosition.z + dz};
       let newRot = {...state.offsetRotation, y: state.offsetRotation.y + rotateY};
@@ -206,9 +199,10 @@ class App extends Component {
     if (this.state.selection) {
       let id = this.state.selection.split(' ')[0];
       let entityRef = this.worldRef.child('entities').child(id);
+      let materialsListRef = this.worldRef.child('materials');
       let getEntityValue = () => this.state.world.entities[id];
       let renderEditor = () => {
-        return <EntityEditor pushOverlay={this.pushOverlay.bind(this)} id={id} entityRef={entityRef} getEntityValue={getEntityValue} />;
+        return <EntityEditor pushOverlay={this.pushOverlay.bind(this)} id={id} entityRef={entityRef} materialsListRef={materialsListRef} getEntityValue={getEntityValue} />;
       };
       this.setState({overlayFunctions: [renderEditor]})
     }
@@ -236,7 +230,16 @@ class App extends Component {
 
 let AREntity = ({id, value, selected, dragState, gestureScale}) => {
   let defaultSelectionColor = '#37f';
-  let color = selected ? (value.selectedColor || defaultSelectionColor) : value.color;
+  
+  let material = null;
+  if (selected) {
+    material = {color: defaultSelectionColor};
+  } else if (value.material) {
+    material = value.material;
+  } else {
+    material = {color: '#e44'};
+  }
+  
   let position = dragState ? dragState.posInCameraSpace : value.position;
   let rotation = dragState ? dragState.rotationInCameraSpace : value.rotation;
   let scale = scaleAllAxes(value.scale || {x: 1, y: 1, z: 1}, gestureScale || 1);
@@ -249,7 +252,7 @@ let AREntity = ({id, value, selected, dragState, gestureScale}) => {
     props.geometry = {primitive: value.primitive || 'box'};
   }
   
-  return <Entity data-entity-id={id} material={{color: color}} position={position} rotation={rotation} scale={scale} shadow={{receive: false}} {...props} />;
+  return <Entity data-entity-id={id} material={material} position={position} rotation={rotation} scale={scale} shadow={{receive: false}} {...props} />;
 };
 
 let Camera = ({onSelectionChanged, onCameraNode, onCameraRotation, draggedObjects, offsetPosition, offsetRotation, onHandNode}) => {

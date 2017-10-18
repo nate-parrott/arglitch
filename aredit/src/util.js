@@ -1,3 +1,4 @@
+import React, { Component } from 'react';
 
 export let radToDeg = (rad) => {
   return rad / Math.PI * 180;
@@ -28,4 +29,24 @@ export let loadImage = (src) => {
     img.onerror = () => reject();
     img.src = src; 
   });
+}
+
+export class FirebaseObserver extends Component {
+  // props: firebaseRef and render(value)
+  constructor(props) {
+    super(props);
+    this.state = {value: null};
+  }
+  componentDidMount() {
+    this.props.firebaseRef.on('value', this.valueChanged.bind(this));
+  }
+  componentWillUnmount() {
+    this.props.firebaseRef.off('value', this.valueChanged.bind(this));
+  }
+  valueChanged(snapshot) {
+    this.setState({value: snapshot.val()});
+  }
+  render() {
+    return this.props.render(this.state.value);
+  }
 }

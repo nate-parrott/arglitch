@@ -151,3 +151,4 @@ export default function ColorPicker({color, onChange}) {
     </div>
   );
 }
+

@@ -44,3 +44,6 @@
   border-radius: 50%;
   box-sizing: border-box;
 }
+.Overlay .ColorPicker {
+  height: 30vh;
+}

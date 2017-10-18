@@ -1,29 +1,31 @@
 import React, { Component } from 'react';
 
+let defaultMaterial = {color: '#e44'};
+
 let NewObjects = [
   {
     text: 'cube',
-    template: {color: 'red', primitive: 'box'}
+    template: {material: defaultMaterial, primitive: 'box'}
   },
   {
     text: 'sphere',
-    template: {color: 'red', primitive: 'sphere'}
+    template: {material: defaultMaterial, primitive: 'sphere'}
   },
   {
     text: 'cylinder',
-    template: {color: 'red', primitive: 'cylinder'}
+    template: {material: defaultMaterial, primitive: 'cylinder'}
   },
   {
     text: 'cone',
-    template: {color: 'red', primitive: 'cone'}
+    template: {material: defaultMaterial, primitive: 'cone'}
   },
   {
     text: 'donut',
-    template: {color: 'red', primitive: 'torus'}
+    template: {material: defaultMaterial, primitive: 'torus'}
   },
   {
     text: 'text',
-    template: {color: 'yellow', primitive: 'text', text: "Text"}
+    template: {material: defaultMaterial, primitive: 'text', text: "Text"}
   }
 ]
 

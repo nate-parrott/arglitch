@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import StretchControl from './StretchControl';
 import TextEditor from './TextEditor';
+import MaterialPicker from './MaterialPicker';
 
 export default class EntityEditor extends Component {
   constructor(props) {
@@ -14,6 +15,7 @@ export default class EntityEditor extends Component {
         <h1>Edit object</h1>
         <ul className='grid'>
           <li onClick={this.stretch.bind(this)}>Stretch shape</li>
+          <li onClick={this.material.bind(this)}>Material...</li>
           {editText}  
         </ul>
       </div>
@@ -28,5 +30,8 @@ export default class EntityEditor extends Component {
       this.props.entityRef.child('text').set(text || 'Text');
     }
     this.props.pushOverlay(() => <TextEditor onSetText={onSetText} initialText={text} />);
+  }
+  material() {
+    this.props.pushOverlay(() => <MaterialPicker materialsListRef={this.props.materialsListRef} onPicked={(material) => this.props.entityRef.child('material').set(material)} pushOverlay={this.props.pushOverlay} />);
   }
 }
