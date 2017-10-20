@@ -46,12 +46,12 @@ let Slider = ({value, onChange, grabber, children}) => {
     let y = (e.touches[0].clientY - boundingRect.y) / boundingRect.height;
     onChange(Math.max(0, Math.min(1, y)));
   }
-  let mouse = (e) => {
-    e.preventDefault();
-    let boundingRect = e.currentTarget.getBoundingClientRect();
-    let y = (e.clientY - boundingRect.y) / boundingRect.height;
-    onChange(Math.max(0, Math.min(1, y)));
-  }
+  // let mouse = (e) => {
+  //   e.preventDefault();
+  //   let boundingRect = e.currentTarget.getBoundingClientRect();
+  //   let y = (e.clientY - boundingRect.y) / boundingRect.height;
+  //   onChange(Math.max(0, Math.min(1, y)));
+  // }
   return (
     <div className='Slider' onTouchStart={touch} onTouchMove={touch}>
       {children}

@@ -14,9 +14,6 @@ class MaterialPickerConcrete extends Component {
     let newSolidColor = () => {
       this.editMaterial(this.props.materialsListRef.push({color: '#f00'}));
     };
-    let newImage = () => {
-      
-    };
     let selectMaterial = (id) => {
       if (id === this.state.selected) {
         this.editMaterial(this.props.materialsListRef.child(id));
@@ -64,7 +61,7 @@ class MaterialPickerConcrete extends Component {
 
 let MaterialView = ({ material }) => {
   let content = null;
-  if (material.smallSrc) content = <img className='texture' src={material.smallSrc} />;
+  if (material.smallSrc) content = <img className='texture' src={material.smallSrc} alt='Texture preview' />;
   if (material.color) content = <div className='solid-color' style={{backgroundColor: material.color}} />;
   return content;
 }

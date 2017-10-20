@@ -1,6 +1,6 @@
 import AFRAME from 'aframe';
-import { Quaternion, Euler, Vector3, Matrix4 } from 'three';
-import { degToRad } from './util';
+// import { Quaternion, Euler, Vector3, Matrix4 } from 'three';
+// import { degToRad } from './util';
 
 export let AR_AVAILABLE = navigator.userAgent.indexOf("!ARKit!") > -1;
 

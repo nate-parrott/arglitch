@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 
 export let radToDeg = (rad) => {
   return rad / Math.PI * 180;
