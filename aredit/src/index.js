@@ -19,6 +19,7 @@ var config = {
 firebase.initializeApp(config);
 let db = firebase.database();
 let storage = firebase.storage();
+window.firebaseStorage = storage;
 
 ReactDOM.render(<App identifier={identifier} database={db} storage={storage} />, document.getElementById('root'));
 registerServiceWorker();

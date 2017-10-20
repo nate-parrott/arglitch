@@ -235,7 +235,7 @@ let AREntity = ({id, value, selected, dragState, gestureScale}) => {
   if (selected) {
     material = {color: defaultSelectionColor};
   } else if (value.material) {
-    material = value.material;
+    material = {color: value.material.color, src: value.material.src};
   } else {
     material = {color: '#e44'};
   }

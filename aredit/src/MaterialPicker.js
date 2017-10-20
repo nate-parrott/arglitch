@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { FirebaseObserver } from './util.js'
 import { NavBar } from './Overlay.js';
 import ColorPicker from './ColorPicker.js';
+import ImageUploader from './ImageUploader.js';
 
 class MaterialPickerConcrete extends Component {
   constructor(props) {
@@ -25,7 +26,7 @@ class MaterialPickerConcrete extends Component {
       }
     };
     let renderCellForMaterialId = (id) => {
-      let className = (id === this.state.selected) ? 'selected' : null;
+      let className = (id === this.state.selected) ? 'MaterialView selected' : 'MaterialView';
       return <div className={className} key={id} onClick={() => selectMaterial(id)}><MaterialView material={this.props.materials[id]} /></div>;
     };
     let materialIds = Object.keys(this.props.materials || {});
@@ -35,7 +36,7 @@ class MaterialPickerConcrete extends Component {
         <NavBar title="Select material" />
         <ul className='HorizontalScroll'>
           <div className='text-button' onClick={newSolidColor} key='newSolidColor'><div>Solid color</div></div>
-          <div className='text-button' onClick={newImage} key='newImage'><div>Image texture</div></div>
+          <ImageUploader className='text-button' onUpload={this.onImageUpload.bind(this)} storage={window.firebaseStorage}><div>Image texure</div></ImageUploader>
           { materialIds.map(renderCellForMaterialId) }
         </ul>
       </div>
@@ -55,12 +56,17 @@ class MaterialPickerConcrete extends Component {
       return <FirebaseObserver firebaseRef={ref} render={render} />;
     });
   }
+  onImageUpload(urls) {
+    let {thumbnailURL, fullSizeURL} = urls;
+    this.props.materialsListRef.push({src: fullSizeURL, smallSrc: thumbnailURL});
+  }
 }
 
 let MaterialView = ({ material }) => {
-  if (material.smallSrc) return <img src={material.smallSrc} />;
-  if (material.color) return <div className='solid-color' style={{backgroundColor: material.color}} />;
-  return null;
+  let content = null;
+  if (material.smallSrc) content = <img className='texture' src={material.smallSrc} />;
+  if (material.color) content = <div className='solid-color' style={{backgroundColor: material.color}} />;
+  return content;
 }
 
 export default function MaterialPicker(props) {

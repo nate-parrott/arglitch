@@ -30,11 +30,14 @@
   text-align: center;
   display: flex;
   background-color: rgba(255,255,255,0.8);
+  position: relative;
 }
-.MaterialPicker .solid-color {
+
+.MaterialView.selected {
+  border: 2px solid white;
+}
+
+.MaterialView .solid-color, .MaterialView .texture {
   width: 100%;
   height: 100%;
-}
-.MaterialPicker .HorizontalScroll > .selected {
-  border: 2px solid white;
 }

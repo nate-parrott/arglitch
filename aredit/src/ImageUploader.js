@@ -12,10 +12,11 @@ export default class ImageUploader extends Component {
   }
   render() {
     let classNames = ['ImageUploader'];
+    if (this.props.className) classNames = classNames.concat(this.props.className.split(' '));
     if (this.state.uploading) classNames.push('uploading');
     return (
       <div className={ classNames.join(' ') } onClick={this.onClick.bind(this)}>
-        { this.state.uploading ? <FontAwesome name='spinner' /> : <FontAwesome name='cloud-upload' /> }
+        { this.state.uploading ? <FontAwesome name='spinner' /> : this.props.children }
         <input type='file' onChange={this.onFileChange.bind(this)} style={{display: 'none'}} ref={(n) => this.fileNode = n} />
       </div>
     )
@@ -36,7 +37,7 @@ export default class ImageUploader extends Component {
         resizeImageToBlob(img, 128, (thumbnailBlob) => {
           uploadAsset(fullSizeBlob, storage).then((fullSizeURL) => {
             uploadAsset(thumbnailBlob, storage).then((thumbnailURL) => {
-              console.log({thumbnailURL, fullSizeURL});
+              this.props.onUpload({thumbnailURL, fullSizeURL});
               this.setState({uploading: false});
             });
           });
