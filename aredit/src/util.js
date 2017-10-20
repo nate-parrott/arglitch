@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import { Euler, Matrix4 } from 'three';
 
 export let radToDeg = (rad) => {
   return rad / Math.PI * 180;
@@ -49,4 +50,28 @@ export class FirebaseObserver extends Component {
   render() {
     return this.props.render(this.state.value);
   }
+}
+
+export let applyRotation = (existingRotation, aboutAxis, angle) => {
+  // aboutAxis is either 'x', 'y' or 'z'
+  // inputs in degrees:
+  let e = new Euler(degToRad(existingRotation.x), degToRad(existingRotation.y), degToRad(existingRotation.z), 'YXZ');
+  
+  let existingRotationMatrix = new Matrix4();
+  existingRotationMatrix.makeRotationFromEuler(e);
+  
+  let newRotation = new Matrix4();
+  if (aboutAxis === 'x') {
+    newRotation.makeRotationX(degToRad(angle));
+  } else if (aboutAxis === 'y') {
+    newRotation.makeRotationY(degToRad(angle));
+  } else if (aboutAxis === 'z') {
+    newRotation.makeRotationZ(degToRad(angle));
+  }
+  
+  newRotation.multiply(existingRotationMatrix);
+  // existingRotationMatrix.multiply(newRotation);
+  e.setFromRotationMatrix(newRotation, 'YXZ');
+  
+  return {x: radToDeg(e.x), y: radToDeg(e.y), z: radToDeg(e.z)};
 }

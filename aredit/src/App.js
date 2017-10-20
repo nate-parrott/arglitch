@@ -4,7 +4,7 @@ import './App.css';
 import { Scene } from 'aframe-react';
 import { initAR, AR_AVAILABLE } from './ar';
 import { Matrix4 } from 'three';
-import { radToDeg, scaleAllAxes, vecToAFramePosition, vecToAFrameRotation } from './util';
+import { radToDeg, scaleAllAxes, vecToAFramePosition, vecToAFrameRotation, applyRotation } from './util';
 import TouchRecognizer from './TouchRecognizer';
 import Controls from './Controls';
 import Overlay from './Overlay';
@@ -55,9 +55,9 @@ class App extends Component {
     // return <ImageUploader storage={this.props.storage} />;
     return (
       <div className="App">
-        <Controls showEditWorldButton={!this.state.selection} onEditObject={this.editSelectedObject.bind(this)} onAdd={this.addObject.bind(this)}>
-          <TouchRecognizer onTouchesBegan={this.startDrag.bind(this)} onTouchesEnded={this.finishDrag.bind(this)} onPan={this.onPan.bind(this)} onScale={this.onScale.bind(this)} onTwoFingerPan={this.onTwoFingerPan.bind(this)}>
-            <Scene>
+        <Controls showEditWorldButton={!this.state.selection} onEditObject={this.editSelectedObject.bind(this)} onAdd={this.addObject.bind(this)} showRotationSwitches={this.state.selection}>
+          <TouchRecognizer onTouchesBegan={this.startDrag.bind(this)} onTouchesEnded={this.finishDrag.bind(this)} onPan={this.onPan.bind(this)} onScale={this.onScale.bind(this)} onTwoFingerPan={this.onTwoFingerPan.bind(this)} rightEdgePan={this.onPitch.bind(this)} bottomEdgePan={this.onYaw.bind(this)}>
+            <Scene vr-mode-ui={{enabled: false}}>
               <Camera onSelectionChanged={(sel) => this.changeSelection(sel)} onCameraNode={(n) => this.cameraNode = n} draggedObjects={this.renderDraggedObjects()} offsetPosition={this.state.offsetPosition} offsetRotation={this.state.offsetRotation} onHandNode={(n) => this.handNode = n} />
               { this.renderEntities() }
               <World shadowMapPos={this.state.shadowMapPos} />
@@ -176,6 +176,28 @@ class App extends Component {
   }
   onRotate(angle) {
     
+  }
+  onPitch(d) {
+    let k = 1;
+    this.updateGrabbedObjectRotation((r) => {
+      return applyRotation(r, 'x', d * k);
+    });
+  }
+  onYaw(d) {
+    let k = 1;
+    this.updateGrabbedObjectRotation((r) => {
+      return applyRotation(r, 'y', d * k);
+    });
+  }
+  updateGrabbedObjectRotation(func) {
+    this.setState(({drags}) => {
+      let newDrags = drags.map((drag) => {
+        let rotation = drag.rotationInCameraSpace;
+        let newRotation = func(rotation);
+        return {...drag, rotationInCameraSpace: newRotation};
+      });
+      return {drags: newDrags};
+    });
   }
   // OVERLAYS:
   renderOverlays() {

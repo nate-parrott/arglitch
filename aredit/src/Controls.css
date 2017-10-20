@@ -33,3 +33,22 @@
   right: 1em;
 }
 
+.Controls .switch {
+  color: white;
+  opacity: 0.8;
+  font-size: x-large;
+  position: absolute;
+  pointer-events: none;
+}
+
+.Controls .switch.pitch {
+  right: 1em;
+  top: 40%;
+}
+
+.Controls .switch.yaw {
+  bottom: 1em;
+  left: 50%;
+}
+
+
