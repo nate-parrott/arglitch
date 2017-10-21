@@ -32,7 +32,8 @@ class App extends Component {
       offsetRotation: {x: 0, y: 0, z: 0},
       gestureScale: 1, // how much have we scaled the objects we're currently dragging?
       overlayFunctions: [],
-      shadowMapPos: {x: 0, z: 0}
+      shadowMapPos: {x: 0, z: 0},
+      currentSlide: null
     };
     this.cameraNode = null;
     this.cameraOffsetNode = null;
@@ -80,10 +81,10 @@ class App extends Component {
     let selectedIds = this.suppressSelectedState() ? [] : this.state.selection.split(' ');
     let hideIds = (this.state.drags || []).map((d) => d.id);
     return Object.keys(entities).map((key) => {
-      let val = entities[key];
       let hide = hideIds.indexOf(key) > -1;
       if (hide) return null;
-      return <AREntity key={ key } id={ key } value={ val } selected={ selectedIds.indexOf(key) > -1 } />;
+      let value = this.propertiesForEntity(key);
+      return <AREntity key={ key } id={ key } value={ value } selected={ selectedIds.indexOf(key) > -1 } />;
     })
   }
   domNodeForEntity(id) {
@@ -98,6 +99,17 @@ class App extends Component {
       x: arPos.x + this.state.offsetPosition.x,
       y: arPos.y + this.state.offsetPosition.y,
       z: arPos.z + this.state.offsetPosition.z
+    }
+  }
+  // SLIDEABLE PROPERTIES:
+  propertiesForEntity(id) {
+    let worldProps = ((this.state.world || {}).entities || {})[id] || {};
+    return worldProps;
+  }
+  updatePropertiesForEntity(id, props) {
+    let entityRef = this.worldRef.child('entities').child(id);
+    for (let key of Object.keys(props)) {
+      entityRef.child(key).set(props[key]);
     }
   }
   // DRAGGING:
@@ -129,11 +141,11 @@ class App extends Component {
       let pos = object3D.getWorldPosition();
       let rot = object3D.getWorldRotation();
       let scale = scaleAllAxes(val.scale || {x: 1, y: 1, z: 1}, this.state.gestureScale || 1);
-      // rot.reorder('XYZ');
-      let ref = this.firebaseRefForEntity(drag.id);
-      ref.child('position').set({x: pos.x, y: pos.y, z: pos.z});
-      ref.child('rotation').set({x: radToDeg(rot.x), y: radToDeg(rot.y), z: radToDeg(rot.z)});
-      ref.child('scale').set(scale);
+      this.updatePropertiesForEntity(drag.id, {
+        position: {x: pos.x, y: pos.y, z: pos.z},
+        rotation: {x: radToDeg(rot.x), y: radToDeg(rot.y), z: radToDeg(rot.z)},
+        scale: scale
+      });
     }
     this.setState({drags: []});
   }

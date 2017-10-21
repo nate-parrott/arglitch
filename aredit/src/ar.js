@@ -47,7 +47,8 @@ export let initAR = () => {
         // m.multiply(quaternionRotation);
         // this.el.object3D.matrix = m;
         
-        if (this.data.position) this.el.object3D.position.set(pos.x, pos.y, pos.z);
+        let kScale = 2;
+        if (this.data.position) this.el.object3D.position.set(pos.x * kScale, pos.y * kScale, pos.z * kScale);
         if (this.data.rotation) this.el.object3D.quaternion.set(pos.q0, pos.q1, pos.q2, pos.q3);
         // this.el.object3D.rotateY(degToRad(this.data.offsetRotation.y));
         // let yRotation = degToRad(this.data.offsetRotation.y);

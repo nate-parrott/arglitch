@@ -75,3 +75,12 @@ export let applyRotation = (existingRotation, aboutAxis, angle) => {
   
   return {x: radToDeg(e.x), y: radToDeg(e.y), z: radToDeg(e.z)};
 }
+
+export let deduplicateStringArray = (array) => {
+  let seen = {};
+  return array.filter((val) => {
+    if (seen[val]) return false;
+    seen[val] = true;
+    return true;
+  });
+}

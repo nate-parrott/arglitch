@@ -1,11 +1,12 @@
 import React from 'react';
 import { Entity } from 'aframe-react';
 import { AR_AVAILABLE } from './ar';
+import { deduplicateStringArray } from './util';
 
 let Camera = ({onSelectionChanged, onCameraNode, onCameraRotation, draggedObjects, offsetPosition, offsetRotation, onHandNode}) => {
   let handDist = 3;
   let onRaycast = (e) => {
-    let intersectedIds = e.target.components.raycaster.intersectedEls.map((el) => el.getAttribute('data-entity-id')).join(' ');
+    let intersectedIds = deduplicateStringArray(e.target.components.raycaster.intersectedEls.map((el) => el.getAttribute('data-entity-id'))).join(' ');
     onSelectionChanged(intersectedIds);
   }
   let raycasterHandlers = {
