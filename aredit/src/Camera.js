@@ -3,7 +3,7 @@ import { Entity } from 'aframe-react';
 import { AR_AVAILABLE } from './ar';
 
 let Camera = ({onSelectionChanged, onCameraNode, onCameraRotation, draggedObjects, offsetPosition, offsetRotation, onHandNode}) => {
-  let handDist = 2;
+  let handDist = 3;
   let onRaycast = (e) => {
     let intersectedIds = e.target.components.raycaster.intersectedEls.map((el) => el.getAttribute('data-entity-id')).join(' ');
     onSelectionChanged(intersectedIds);

@@ -16,6 +16,8 @@ export default class EntityEditor extends Component {
         <ul className='grid'>
           <li onClick={this.stretch.bind(this)}>Stretch shape</li>
           <li onClick={this.material.bind(this)}>Material...</li>
+          <li onClick={this.props.onDuplicate}>Duplicate</li>
+          <li onClick={this.delete.bind(this)}>Delete</li>
           {editText}  
         </ul>
       </div>
@@ -33,5 +35,9 @@ export default class EntityEditor extends Component {
   }
   material() {
     this.props.pushOverlay(() => <MaterialPicker materialsListRef={this.props.materialsListRef} onPicked={(material) => this.props.entityRef.child('material').set(material)} pushOverlay={this.props.pushOverlay} />);
+  }
+  delete() {
+    this.props.entityRef.remove();
+    this.props.dismiss();
   }
 }

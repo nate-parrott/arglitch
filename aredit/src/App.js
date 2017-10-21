@@ -146,7 +146,7 @@ class App extends Component {
   // EVENT HANDLING:
   onPan(delta) {
     let forwardMotion = delta.y * 0.02;
-    // for now, assume world rotation is only on the y axis:
+    // we can safely ignore the other directions b/c aframe uses YXZ-order rotation, so rotations on other axes won't change the final Y direction of the camera
     let angle = this.cameraNode.object3D.getWorldRotation().y;
     let dx = Math.sin(angle) * forwardMotion;
     let dz = Math.cos(angle) * forwardMotion;
@@ -164,14 +164,21 @@ class App extends Component {
     });
   }
   onTwoFingerPan(delta) {
-    alert(delta);
     let k = 0.02;
-    this.setState(({drags}) => {
+    this.setState(({drags, offsetPosition}) => {
+      // use delta.y to vertically move the selection in camera space: (TODO: should be WORLD space)
       let newDrags = drags.map((drag) => {
         let {x,y,z} = drag.posInCameraSpace;
-        return {...drag, posInCameraSpace: {x: x + delta.x * k, y: y - delta.y * k, z: z}}
+        return {...drag, posInCameraSpace: {y: y - delta.y * k, x, z}}
       });
-      return {drags: newDrags};
+      
+      let sidewaysMotion = delta.x * 0.02;
+      let angle = this.cameraNode.object3D.getWorldRotation().y + Math.PI / 2;
+      let dx = Math.sin(angle) * sidewaysMotion;
+      let dz = Math.cos(angle) * sidewaysMotion;
+      let newOffsetPosition = {y: offsetPosition.y, x: offsetPosition.x + dx, z: offsetPosition.z + dz};
+      
+      return {drags: newDrags, offsetPosition: newOffsetPosition};
     });
   }
   onRotate(angle) {
@@ -227,7 +234,7 @@ class App extends Component {
       let materialsListRef = this.worldRef.child('materials');
       let getEntityValue = () => this.state.world.entities[id];
       let renderEditor = () => {
-        return <EntityEditor pushOverlay={this.pushOverlay.bind(this)} id={id} entityRef={entityRef} materialsListRef={materialsListRef} getEntityValue={getEntityValue} />;
+        return <EntityEditor pushOverlay={this.pushOverlay.bind(this)} id={id} entityRef={entityRef} materialsListRef={materialsListRef} getEntityValue={getEntityValue} onDuplicate={() => this.duplicateEntity(id)} dismiss={this.dismissOverlays.bind(this)} />;
       };
       this.setState({overlayFunctions: [renderEditor]})
     }
@@ -250,6 +257,19 @@ class App extends Component {
       this.setState({shadowMapPos: {x: cameraPos.x, z: cameraPos.z}});
     }
     this._shadowMapTimeout = setTimeout(() => this.shadowMapUpdateLoop(), 500);
+  }
+  duplicateEntity(id) {
+    this.dismissOverlays();
+    
+    let entityJson = this.state.world.entities[id];
+    let {x,y,z} = entityJson.position;
+    let angle = this.cameraNode.object3D.getWorldRotation().y + Math.PI / 2;
+    let sidewaysMotion = 2;
+    let dx = Math.sin(angle) * sidewaysMotion;
+    let dz = Math.cos(angle) * sidewaysMotion;
+    let newPosition = {x: x+dx, y: y, z: z+dz};
+    let newJson = {...entityJson, position: newPosition};
+    this.worldRef.child('entities').push(newJson);
   }
 }
 
