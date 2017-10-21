@@ -6,6 +6,7 @@ import { initAR, AR_AVAILABLE } from './ar';
 import { Matrix4 } from 'three';
 import { radToDeg, scaleAllAxes, vecToAFramePosition, vecToAFrameRotation, applyRotation } from './util';
 import TouchRecognizer from './TouchRecognizer';
+import WorldMenu from './WorldMenu';
 import Controls from './Controls';
 import Overlay from './Overlay';
 import EntityEditor from './EntityEditor';
@@ -55,7 +56,7 @@ class App extends Component {
     // return <ImageUploader storage={this.props.storage} />;
     return (
       <div className="App">
-        <Controls showEditWorldButton={!this.state.selection} onEditObject={this.editSelectedObject.bind(this)} onAdd={this.addObject.bind(this)} showRotationSwitches={this.state.selection}>
+        <Controls showEditWorldButton={!this.state.selection} onEditObject={this.editSelectedObject.bind(this)} onAdd={this.addObject.bind(this)} showRotationSwitches={this.state.selection} onMenu={this.showMenu.bind(this)}>
           <TouchRecognizer onTouchesBegan={this.startDrag.bind(this)} onTouchesEnded={this.finishDrag.bind(this)} onPan={this.onPan.bind(this)} onScale={this.onScale.bind(this)} onTwoFingerPan={this.onTwoFingerPan.bind(this)} rightEdgePan={this.onPitch.bind(this)} bottomEdgePan={this.onYaw.bind(this)}>
             <Scene vr-mode-ui={{enabled: false}}>
               <Camera onSelectionChanged={(sel) => this.changeSelection(sel)} onCameraNode={(n) => this.cameraNode = n} draggedObjects={this.renderDraggedObjects()} offsetPosition={this.state.offsetPosition} offsetRotation={this.state.offsetRotation} onHandNode={(n) => this.handNode = n} />
@@ -270,6 +271,12 @@ class App extends Component {
     let newPosition = {x: x+dx, y: y, z: z+dz};
     let newJson = {...entityJson, position: newPosition};
     this.worldRef.child('entities').push(newJson);
+  }
+  showMenu() {
+    let renderMenu = () => {
+      return <WorldMenu world={this.state.world} pushOverlay={this.pushOverlay.bind(this)} worldRef={this.worldRef} />
+    }
+    this.setState({overlayFunctions: [renderMenu]});
   }
 }
 

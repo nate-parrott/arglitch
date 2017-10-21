@@ -1,0 +1,41 @@
+.WorldMenu {
+  
+}
+
+.WorldMenu > *:not(:last-child) {
+  margin-bottom: 1em;
+}
+
+.WorldMenu > *:not(:first-child) {
+  margin-top: 1em;
+}
+
+.WorldMenu .worldTitle {
+  appearance: none;
+  border: none;
+  font-family: inherit;
+  font-size: 1em;
+  padding: 0.5em;
+  text-align: center;
+  background: none;
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  font-size: large;
+  color: white;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  font-weight: bold;
+}
+
+.SlidePicker > div {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2em;
+  background-color: rgba(255,255,255,0.5);
+  color: black;
+  margin: 0.5em;
+  border-radius: 5px;
+}
