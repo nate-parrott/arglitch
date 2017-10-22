@@ -34,8 +34,17 @@
   justify-content: center;
   align-items: center;
   font-size: 2em;
-  background-color: rgba(255,255,255,0.5);
+  background-color: rgba(255,255,255,0.4);
   color: black;
-  margin: 0.5em;
   border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.SlidePicker .new {
+  font-size: 1em;
+  color: rgba(0,0,0,0.5);
+}
+
+.SlidePicker .selected {
+  background-color: rgba(255,255,255,0.7);
 }

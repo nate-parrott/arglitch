@@ -15,7 +15,9 @@ import World from './World';
 import AREntity from './AREntity';
 import Camera from './Camera';
 import { clampScale } from './util';
+import { MAIN_SLIDE, SLIDE_PROPS, TRANSITION_DURATION } from './constants.js';
 require('aframe-text-geometry-component');
+require('aframe-animation-component');
 
 if (AR_AVAILABLE) {
   initAR();
@@ -33,7 +35,8 @@ class App extends Component {
       gestureScale: 1, // how much have we scaled the objects we're currently dragging?
       overlayFunctions: [],
       shadowMapPos: {x: 0, z: 0},
-      currentSlide: null
+      currentSlide: MAIN_SLIDE,
+      transitioningFromSlide: null
     };
     this.cameraNode = null;
     this.cameraOffsetNode = null;
@@ -84,7 +87,8 @@ class App extends Component {
       let hide = hideIds.indexOf(key) > -1;
       if (hide) return null;
       let value = this.propertiesForEntity(key);
-      return <AREntity key={ key } id={ key } value={ value } selected={ selectedIds.indexOf(key) > -1 } />;
+      let transitioningFromValue = this.state.transitioningFromSlide ? this.propertiesForEntityWithSlide(key, this.state.transitioningFromSlide) : null;
+      return <AREntity key={ key } id={ key } value={ value } transitioningFromValue={ transitioningFromValue } selected={ selectedIds.indexOf(key) > -1 } />;
     })
   }
   domNodeForEntity(id) {
@@ -103,13 +107,40 @@ class App extends Component {
   }
   // SLIDEABLE PROPERTIES:
   propertiesForEntity(id) {
-    let worldProps = ((this.state.world || {}).entities || {})[id] || {};
-    return worldProps;
+    return this.propertiesForEntityWithSlide(id, this.state.currentSlide);
+  }
+  propertiesForEntityWithSlide(id, slide) {
+    let world = this.state.world || {};
+    let curSlide = (world.slides || {})[slide] || {};
+    let worldProps = (world.entities || {})[id] || {};
+    let slideProps = curSlide[id] || {};
+    return {...worldProps, ...slideProps};
   }
   updatePropertiesForEntity(id, props) {
     let entityRef = this.worldRef.child('entities').child(id);
+    let slideEntityRef = this.worldRef.child('slides').child(this.state.currentSlide).child(id);
     for (let key of Object.keys(props)) {
+      if (SLIDE_PROPS[key]) {
+        slideEntityRef.child(key).set(props[key]);
+      }
+      // also set on the entity itself as a fallback:
       entityRef.child(key).set(props[key]);
+    }
+  }
+  changeSlide(slide) {
+    if (slide !== this.state.currentSlide) {
+      let transitioningFromSlide = this.state.currentSlide;
+      this.setState({currentSlide: slide, transitioningFromSlide});
+      setTimeout(() => {
+        // remove the transition state:
+        this.setState((state) => {
+          if (state.transitioningFromSlide === transitioningFromSlide) {
+            return {transitioningFromSlide: null};
+          } else {
+            return {};
+          }
+        });
+      }, TRANSITION_DURATION * 1000);
     }
   }
   // DRAGGING:
@@ -286,7 +317,7 @@ class App extends Component {
   }
   showMenu() {
     let renderMenu = () => {
-      return <WorldMenu world={this.state.world} pushOverlay={this.pushOverlay.bind(this)} worldRef={this.worldRef} />
+      return <WorldMenu world={this.state.world} pushOverlay={this.pushOverlay.bind(this)} worldRef={this.worldRef} currentSlide={this.state.currentSlide} onChangeSlide={this.changeSlide.bind(this)} />
     }
     this.setState({overlayFunctions: [renderMenu]});
   }
