@@ -1,6 +1,6 @@
 import AFRAME from 'aframe';
-// import { Quaternion, Euler, Vector3, Matrix4 } from 'three';
-// import { degToRad } from './util';
+import { Quaternion, Euler, Vector3, Matrix4 } from 'three';
+import { degToRad } from './util';
 
 export let AR_AVAILABLE = navigator.userAgent.indexOf("!ARKit!") > -1;
 
@@ -22,41 +22,52 @@ export let initAR = () => {
   }
   
   AFRAME.registerComponent('ar-driven', {
+    schema: {
+      yRotation: {
+        type: 'float', default: 0
+      }
+    },
     init: function() {
-      // window.arTrackedElement = this.el;
-      // this.el.object3D.matrixAutoUpdate = false;
-      
+      this.worldPosition = {x: 0, y: 0, z: 0};
+      this.lastARPos = {x: 0, y: 0, z: 0};
     },
     tick: function() {
       let pos = window.lastARPos;
       if (pos) {
-        // let yRotation = degToRad(this.data.offsetRotation.y);
-        // let offsetRotation = new Matrix4();
-        // offsetRotation.makeRotationY(yRotation);
-        //
-        // let quaternionRotation = new Matrix4();
-        // quaternionRotation.makeRotationFromQuaternion(new Quaternion(pos.q0, pos.q1, pos.q2, pos.q3));
-        //
-        // // let translation = new Matrix4();
-        // // translation.setPosition(new Vector3(pos.x, pos.y, pos.z));
-        //
-        // let m = new Matrix4();
-        // m.setPosition(new Vector3(pos.x, pos.y, pos.z));
-        // // m.multiply(translation);
-        // m.multiply(offsetRotation);
-        // m.multiply(quaternionRotation);
-        // this.el.object3D.matrix = m;
-        
         let kScale = 2;
-        if (this.data.position) this.el.object3D.position.set(pos.x * kScale, pos.y * kScale, pos.z * kScale);
-        if (this.data.rotation) this.el.object3D.quaternion.set(pos.q0, pos.q1, pos.q2, pos.q3);
-        // this.el.object3D.rotateY(degToRad(this.data.offsetRotation.y));
-        // let yRotation = degToRad(this.data.offsetRotation.y);
-        // rotateAroundWorldAxis(this.el.object3D, new Vector3(0, 1, 0), yRotation);
-        // this.el.object3D.setRotationFromEuler(new Euler(0, yRotation, 0));
-        // this.el.object3D.applyQuaternion(new Quaternion(pos.q0, pos.q1, pos.q2, pos.q3));
+        // if (this.data.position) this.el.object3D.position.set(pos.x * kScale, pos.y * kScale, pos.z * kScale);
+        // if (this.data.rotation) this.el.object3D.quaternion.set(pos.q0, pos.q1, pos.q2, pos.q3);
+        
+        let delta = new Vector3(pos.x - this.lastARPos.x, pos.y - this.lastARPos.y, pos.z - this.lastARPos.z);
+        
+        let cameraSpace = new Matrix4();
+        cameraSpace.makeRotationFromQuaternion(new Quaternion(pos.q0, pos.q1, pos.q2, pos.q3));
+
+        let rotationIntoCameraSpace = new Matrix4();
+        rotationIntoCameraSpace.getInverse(cameraSpace);
+        
+        let externalRotation = new Matrix4();
+        externalRotation.makeRotationY(degToRad(this.data.yRotation));
+
+        let rotationIntoWorldSpace = new Matrix4();
+        rotationIntoWorldSpace.makeRotationFromQuaternion(new Quaternion(pos.q0, pos.q1, pos.q2, pos.q3));
+
+        rotationIntoWorldSpace.premultiply(externalRotation);
+        
+        delta.applyMatrix4(rotationIntoCameraSpace);
+        delta.applyMatrix4(rotationIntoWorldSpace);
+        
+        this.worldPosition.x += delta.x * kScale;
+        this.worldPosition.y += delta.y * kScale;
+        this.worldPosition.z += delta.z * kScale;
+        
+        this.el.object3D.position.set(this.worldPosition.x, this.worldPosition.y, this.worldPosition.z);
+        // this.el.object3D.quaternion.set(pos.q0, pos.q1, pos.q2, pos.q3);
+        this.el.object3D.quaternion.setFromRotationMatrix(rotationIntoWorldSpace);
+        
+        this.lastARPos = pos;
       }
+      window.lastARPos = null;
     }
   });
 }
-

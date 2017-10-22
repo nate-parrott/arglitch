@@ -194,7 +194,7 @@ class App extends Component {
     let angle = this.cameraNode.object3D.getWorldRotation().y;
     let dx = Math.sin(angle) * forwardMotion;
     let dz = Math.cos(angle) * forwardMotion;
-    let rotateY = AR_AVAILABLE ? delta.x * -0.2 : 0;
+    let rotateY = delta.x * -0.2;
     
     this.setState((state) => {
       let newPos = {x: state.offsetPosition.x + dx, y: state.offsetPosition.y, z: state.offsetPosition.z + dz};
