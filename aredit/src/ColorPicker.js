@@ -3,7 +3,7 @@ import tinycolor from 'tinycolor2';
 import './ColorPicker.css';
 import { loadImage } from './util.js';
 
-class CanvasRenderer extends Component {
+export class CanvasRenderer extends Component {
   constructor(props) {
     super(props);
     this.requestedRedraw = false;
@@ -70,7 +70,7 @@ let HueSlider = ({hsva, grabber, onChange}) => {
   return <div className='HueSlider'><ImageLoader src="/hue.png" render={render} /></div>;
 }
 
-let hsvaToColorString = (hsva) => {
+export let hsvaToColorString = (hsva) => {
   return tinycolor.fromRatio(hsva).toRgbString();
 }
 

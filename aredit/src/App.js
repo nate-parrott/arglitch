@@ -16,6 +16,7 @@ import AREntity from './AREntity';
 import Camera from './Camera';
 import { clampScale } from './util';
 import { MAIN_SLIDE, SLIDE_PROPS, TRANSITION_DURATION } from './constants.js';
+import SkyEditor from './SkyEditor.js';
 require('aframe-text-geometry-component');
 require('aframe-animation-component');
 
@@ -58,6 +59,7 @@ class App extends Component {
   render() {
     // return <ColorPickerDemo />;
     // return <ImageUploader storage={this.props.storage} />;
+    // return <SkyEditor />;
     return (
       <div className="App">
         <Controls showEditWorldButton={!this.state.selection} onEditObject={this.editSelectedObject.bind(this)} onAdd={this.addObject.bind(this)} showRotationSwitches={this.state.selection} onMenu={this.showMenu.bind(this)}>
