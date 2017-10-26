@@ -3,6 +3,7 @@
   width: 320px;
   height: 200px;
   box-shadow: 0px 0px 20px rgba(0,0,0,0.5);
+  overflow: hidden;
 }
 .ColorPicker {
   display: flex;
@@ -10,6 +11,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
+  overflow: hidden;
 }
 .ColorPicker > * {
   height: 90%;

@@ -12,11 +12,12 @@ class MaterialPickerConcrete extends Component {
   }
   render() {
     let newSolidColor = () => {
-      this.editMaterial(this.props.materialsListRef.push({color: '#f00'}));
+      let id = this.props.materialsListRef.push({color: '#f00'}).key;
+      this.editMaterial(id);
     };
     let selectMaterial = (id) => {
       if (id === this.state.selected) {
-        this.editMaterial(this.props.materialsListRef.child(id));
+        this.editMaterial(id);
       } else {
         this.setState({ selected: id });
         this.props.onPicked(this.props.materials[id]);
@@ -39,7 +40,8 @@ class MaterialPickerConcrete extends Component {
       </div>
     )
   }
-  editMaterial(ref) {
+  editMaterial(id) {
+    let ref = this.props.materialsListRef.child(id);
     this.props.pushOverlay(() => {
       let render = (value) => {
         if (!value) return null;

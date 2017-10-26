@@ -57,12 +57,16 @@
   justify-content: center;
   align-items: center;
   border-bottom: 1px solid rgba(255,255,255,0.2);
+  height: 40px;
 }
 
 .Overlay .BackButtonContainer {
   position: absolute;
   top: 0;
   left: 0;
+  height: 40px;
+  display: flex;
+  justify-content: stretch;
 }
 
 .NavBarItem, .NavBar h2 {
@@ -73,12 +77,17 @@
   margin: 0;
   opacity: 0.5;
   text-transform: uppercase;
+  white-space: nowrap;
+  font-size: small;
 }
 
 .NavBarButton {
   font-weight: bold;
-  padding: 20px;
   cursor: default;
+  padding-left: 20px;
+  padding-right: 20px;
+  display: flex;
+  align-items: center;
 }
 
 .Overlay .NavBar .NavBarButton {
