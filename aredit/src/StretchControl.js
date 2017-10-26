@@ -17,7 +17,7 @@ export default class StretchControl extends Component {
   touchStart(e) {
     e.preventDefault();
     this.posAtStartOfGesture = {x: e.touches[0].screenX, y: e.touches[0].screenY};
-    this.scaleAtStartOfGesture = this.props.getEntityValue().scale || {x: 1, y: 1, z: 1};
+    this.scaleAtStartOfGesture = this.props.getEntityProps().scale || {x: 1, y: 1, z: 1};
   }
   touchMove(e) {
     e.preventDefault();
@@ -30,7 +30,7 @@ export default class StretchControl extends Component {
       y: clampScale(s.y - delta.y * k), 
       z: s.z
     };
-    this.props.entityRef.child('scale').set(newScale);
+    this.props.updateEntityProps({scale: newScale});
   }
   touchEnd(e) {
     e.preventDefault();

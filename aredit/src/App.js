@@ -276,9 +276,11 @@ class App extends Component {
       let id = this.state.selection.split(' ')[0];
       let entityRef = this.worldRef.child('entities').child(id);
       let materialsListRef = this.worldRef.child('materials');
+      let updateEntityProps = (props) => this.updatePropertiesForEntity(id, props);
+      let getEntityProps = () => this.propertiesForEntity(id);
       let getEntityValue = () => this.state.world.entities[id];
       let renderEditor = () => {
-        return <EntityEditor pushOverlay={this.pushOverlay.bind(this)} id={id} entityRef={entityRef} materialsListRef={materialsListRef} getEntityValue={getEntityValue} onDuplicate={() => this.duplicateEntity(id)} dismiss={this.dismissOverlays.bind(this)} />;
+        return <EntityEditor pushOverlay={this.pushOverlay.bind(this)} id={id} entityRef={entityRef} materialsListRef={materialsListRef} getEntityValue={getEntityValue} onDuplicate={() => this.duplicateEntity(id)} dismiss={this.dismissOverlays.bind(this)} updateEntityProps={updateEntityProps} getEntityProps={getEntityProps} />;
       };
       this.setState({overlayFunctions: [renderEditor]})
     }

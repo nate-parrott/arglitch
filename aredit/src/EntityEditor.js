@@ -24,7 +24,7 @@ export default class EntityEditor extends Component {
     );
   }
   stretch() {
-    this.props.pushOverlay(() => <StretchControl entityRef={this.props.entityRef} getEntityValue={this.props.getEntityValue} />);
+    this.props.pushOverlay(() => <StretchControl entityRef={this.props.entityRef} getEntityProps={this.props.getEntityProps} updateEntityProps={this.props.updateEntityProps} />);
   }
   editText() {
     let text = this.props.getEntityValue().text;

@@ -37,7 +37,7 @@ let AREntity = ({id, value, transitioningFromValue, selected, dragState, gesture
     // props = {...props, ...animationProps(transitioningFromValue, value)};
   }
   
-  return <Entity data-entity-id={id} material={material} shadow={{receive: false}} {...props} />;
+  return <Entity data-entity-id={id} material={material} shadow={{receive: true}} {...props} />;
 };
 
 // let animationProps = (transitioningFromValue, value) => {
