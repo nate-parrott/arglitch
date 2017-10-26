@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F014EED1FA17BD6001E1BD1 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F014EEC1FA17BD6001E1BD1 /* Model.swift */; };
+		5F014EEF1FA17EB5001E1BD1 /* URLPickerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F014EEE1FA17EB5001E1BD1 /* URLPickerTableViewController.swift */; };
 		5F5A29E61F84AF5700861E65 /* ARCamera+Decompose.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F5A29E51F84AF5700861E65 /* ARCamera+Decompose.m */; };
 		5FC574131F84A5A600E36CAF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FC574121F84A5A600E36CAF /* AppDelegate.swift */; };
 		5FC574151F84A5A600E36CAF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FC574141F84A5A600E36CAF /* ViewController.swift */; };
@@ -16,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5F014EEC1FA17BD6001E1BD1 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		5F014EEE1FA17EB5001E1BD1 /* URLPickerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLPickerTableViewController.swift; sourceTree = "<group>"; };
 		5F5A29E31F84AF5700861E65 /* ARGlitch-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ARGlitch-Bridging-Header.h"; sourceTree = "<group>"; };
 		5F5A29E41F84AF5700861E65 /* ARCamera+Decompose.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ARCamera+Decompose.h"; sourceTree = "<group>"; };
 		5F5A29E51F84AF5700861E65 /* ARCamera+Decompose.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ARCamera+Decompose.m"; sourceTree = "<group>"; };
@@ -60,6 +64,8 @@
 			children = (
 				5FC574121F84A5A600E36CAF /* AppDelegate.swift */,
 				5FC574141F84A5A600E36CAF /* ViewController.swift */,
+				5F014EEE1FA17EB5001E1BD1 /* URLPickerTableViewController.swift */,
+				5F014EEC1FA17BD6001E1BD1 /* Model.swift */,
 				5F5A29E41F84AF5700861E65 /* ARCamera+Decompose.h */,
 				5F5A29E51F84AF5700861E65 /* ARCamera+Decompose.m */,
 				5FC574161F84A5A600E36CAF /* Main.storyboard */,
@@ -145,8 +151,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				5FC574151F84A5A600E36CAF /* ViewController.swift in Sources */,
+				5F014EEF1FA17EB5001E1BD1 /* URLPickerTableViewController.swift in Sources */,
 				5F5A29E61F84AF5700861E65 /* ARCamera+Decompose.m in Sources */,
 				5FC574131F84A5A600E36CAF /* AppDelegate.swift in Sources */,
+				5F014EED1FA17BD6001E1BD1 /* Model.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

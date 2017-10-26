@@ -25,8 +25,8 @@
                                         zFar:80];
     
     const float *pModelMatrix = (const float *)(&modelMatrix);
-    const float *pViewMatrix = (const float *)(&viewMatrix);
-    const float *pProjectionMatrix = (const float *)(&projectionMatrix);
+    // const float *pViewMatrix = (const float *)(&viewMatrix);
+    // const float *pProjectionMatrix = (const float *)(&projectionMatrix);
     
     simd_quatf orientationQuat = simd_quaternion(modelMatrix);
     const float *pOrientationQuat = (const float *)(&orientationQuat);
