@@ -10,13 +10,13 @@ import WorldMenu from './WorldMenu';
 import Controls from './Controls';
 import Overlay from './Overlay';
 import EntityEditor from './EntityEditor';
+import WorldEditor from './WorldEditor';
 import AddSheet from './AddSheet';
 import World from './World';
 import AREntity from './AREntity';
 import Camera from './Camera';
 import { clampScale } from './util';
 import { MAIN_SLIDE, SLIDE_PROPS, TRANSITION_DURATION } from './constants.js';
-import SkyEditor from './SkyEditor.js';
 require('aframe-text-geometry-component');
 require('aframe-animation-component');
 
@@ -44,13 +44,11 @@ class App extends Component {
     this.prevPanDelta = null;
   }
   componentDidMount() {
-    // console.log(this.props.database.ref('worlds/' + this.props.identifier))
     this.worldRef = this.props.database.ref('worlds/' + this.props.identifier);
     this.worldRef.on('value', (snapshot) => {
       this.setState({world: snapshot.val()});
     });
     this.shadowMapUpdateLoop();
-    // this.pushOverlay(() => <ColorPicker color='#f44' />);
   }
   componentWillUnmount() {
     if (this._shadowMapTimeout) clearTimeout(this._shadowMapTimeout);
@@ -62,12 +60,12 @@ class App extends Component {
     // return <SkyEditor />;
     return (
       <div className="App">
-        <Controls showEditWorldButton={!this.state.selection} onEditObject={this.editSelectedObject.bind(this)} onAdd={this.addObject.bind(this)} showRotationSwitches={this.state.selection} onMenu={this.showMenu.bind(this)}>
+        <Controls showEditWorldButton={!this.state.selection} onEditObject={this.editSelectedObject.bind(this)} onAdd={this.addObject.bind(this)} showRotationSwitches={this.state.selection} onMenu={this.showMenu.bind(this)} onEditWorld={this.editWorld.bind(this)}>
           <TouchRecognizer onTouchesBegan={this.startDrag.bind(this)} onTouchesEnded={this.finishDrag.bind(this)} onPan={this.onPan.bind(this)} onScale={this.onScale.bind(this)} onTwoFingerPan={this.onTwoFingerPan.bind(this)} rightEdgePan={this.onPitch.bind(this)} bottomEdgePan={this.onYaw.bind(this)}>
             <Scene vr-mode-ui={{enabled: false}}>
               <Camera onSelectionChanged={(sel) => this.changeSelection(sel)} onCameraNode={(n) => this.cameraNode = n} draggedObjects={this.renderDraggedObjects()} offsetPosition={this.state.offsetPosition} offsetRotation={this.state.offsetRotation} onHandNode={(n) => this.handNode = n} />
               { this.renderEntities() }
-              <World shadowMapPos={this.state.shadowMapPos} />
+              <World shadowMapPos={this.state.shadowMapPos} world={this.state.world} />
             </Scene>
           </TouchRecognizer>
         </Controls>
@@ -287,6 +285,12 @@ class App extends Component {
       this.setState({overlayFunctions: [renderEditor]})
     }
   }
+  editWorld() {
+    let renderEditor = () => {
+      return <WorldEditor pushOverlay={this.pushOverlay.bind(this)} world={this.state.world} worldRef={this.worldRef} />;
+    }
+    this.setState({overlayFunctions: [renderEditor]});
+  }
   addObject() {
     let getWorldPositionAndRotation = () => {
       let object3D = this.handNode.object3D;
@@ -321,7 +325,7 @@ class App extends Component {
   }
   showMenu() {
     let renderMenu = () => {
-      return <WorldMenu world={this.state.world} pushOverlay={this.pushOverlay.bind(this)} worldRef={this.worldRef} currentSlide={this.state.currentSlide} onChangeSlide={this.changeSlide.bind(this)} />
+      return <WorldMenu world={this.state.world || {}} pushOverlay={this.pushOverlay.bind(this)} worldRef={this.worldRef} currentSlide={this.state.currentSlide} onChangeSlide={this.changeSlide.bind(this)} />
     }
     this.setState({overlayFunctions: [renderMenu]});
   }

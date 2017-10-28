@@ -1,23 +1,28 @@
 import React, { Component } from 'react';
-import {Entity} from 'aframe-react';
+import { Entity } from 'aframe-react';
+import { VRSkyComponent, defaultSky } from './SkyEditor';
+import { mapColor } from './color';
 
 export default class World extends Component {
   render() {
+    let world = this.props.world || {};
+    let sky = world.sky || defaultSky;
     return (
       <Entity>
         <Floor />
-        <Entity primitive='a-sky' src="/sky.png"/>
-        {this.renderLights()}
+        {this.renderLights(sky)}
+        <VRSkyComponent sky={sky} />;
       </Entity>
     )
   }
-  renderLights() {
+  renderLights(sky) {
+    let {directional, ambient} = computeLighting(sky);
     let shadowSize = 10; // actually twice the side length of the shadow map
     let shadowX = this.props.shadowMapPos.x;
     let shadowZ = -this.props.shadowMapPos.z;
     let directionalLightOptions = {
       type: 'directional', 
-      color: '#ffd', 
+      color: directional, 
       intensity: 0.7, 
       castShadow: true, 
       // shadowCameraVisible: true,
@@ -28,7 +33,7 @@ export default class World extends Component {
     }
     return [
       <Entity key='sun' position={{x: 0, y: 100, z: 0}} light={directionalLightOptions} />,
-      <Entity key='ambient' light={{type: 'ambient', color: '#cdf', intensity: 0.5 }} />
+      <Entity key='ambient' light={{type: 'ambient', color: ambient, intensity: 0.5 }} />
     ];
   }
 }
@@ -37,3 +42,14 @@ let Floor = () => {
   return <Entity shadow={{cast: false}} primitive='a-plane' material={{src: '/grass.jpg', repeat: '200 200'}} position={{x: 0, y: -2, z: 0}} rotation={{x: -90, y: 0, z: 0}} scale={{ x: 1000, y: 1000, z: 1000 }} />;
 }
 
+let computeLighting = (sky) => {
+  let directional = mapColor(sky.skyColor, ({h,s,v,a}) => {
+    v = Math.max(0.3, v);
+    return {h,s,v,a: 1};
+  });
+  let ambient = mapColor(sky.horizonColor, ({h,s,v,a}) => {
+    v = Math.max(0.2, Math.min(0.7, v));
+    return {h,s,v,a: 1};
+  });
+  return {directional, ambient};
+}

@@ -2,29 +2,7 @@ import React, { Component } from 'react';
 import tinycolor from 'tinycolor2';
 import './ColorPicker.css';
 import { loadImage } from './util.js';
-
-export class CanvasRenderer extends Component {
-  constructor(props) {
-    super(props);
-    this.requestedRedraw = false;
-  }
-  render() {
-    this.dirty();
-    return <canvas width={this.props.width} height={this.props.height} ref={(c) => {this.canvas = c}} />;
-  }
-  dirty() {
-    if (!this.requestedRedraw) {
-      this.requestedRedraw = true;
-      window.requestAnimationFrame(() => {
-        this.draw();
-      })
-    }
-  }
-  draw() {
-    if (this.canvas) this.props.draw(this.canvas.getContext('2d'));
-    this.requestedRedraw = false;
-  }
-}
+import CanvasRenderer from './CanvasRenderer';
 
 class ImageLoader extends Component {
   constructor(props) {
@@ -62,10 +40,10 @@ let Slider = ({value, onChange, grabber, children}) => {
 
 let HueSlider = ({hsva, grabber, onChange}) => {
   let render = (image) => {
-    let draw = (ctx) => {
-      ctx.drawImage(image, 0, 0, 1, 256);
+    let draw = (ctx, props) => {
+      ctx.drawImage(props.image, 0, 0, 1, 256);
     }
-    return <Slider value={hsva.h} grabber={grabber} onChange={onChange}><CanvasRenderer width="1" height="256" draw={draw}/></Slider>;
+    return <Slider value={hsva.h} grabber={grabber} onChange={onChange}><CanvasRenderer image={image} width="1" height="256" draw={draw}/></Slider>;
   }
   return <div className='HueSlider'><ImageLoader src="/hue.png" render={render} /></div>;
 }
@@ -75,7 +53,8 @@ export let hsvaToColorString = (hsva) => {
 }
 
 let SaturationSlider = ({hsva, grabber, onChange}) => {
-  let draw = (ctx) => {
+  let draw = (ctx, props) => {
+    let hsva = props.color;
     let gradient = ctx.createLinearGradient(0, 0, 0, 256);
     gradient.addColorStop(0, hsvaToColorString({...hsva, s: 0, a: 1, v: 1}));
     gradient.addColorStop(1, hsvaToColorString({...hsva, s: 1, a: 1, v: 1}));
@@ -92,7 +71,8 @@ let SaturationSlider = ({hsva, grabber, onChange}) => {
 }
 
 let ValueSlider = ({hsva, grabber, onChange}) => {
-  let draw = (ctx) => {
+  let draw = (ctx, props) => {
+    let hsva = props.color;
     let gradient = ctx.createLinearGradient(0, 0, 0, 256);
     gradient.addColorStop(0, hsvaToColorString({...hsva, v: 0, a: 1}));
     gradient.addColorStop(1, hsvaToColorString({...hsva, v: 1, a: 1}));
@@ -109,7 +89,8 @@ let ValueSlider = ({hsva, grabber, onChange}) => {
 }
 
 let AlphaSlider = ({hsva, grabber, onChange}) => {
-  let draw = (ctx) => {
+  let draw = (ctx, props) => {
+    let hsva = props.color;
     ctx.clearRect(0,0,1,256);
     let gradient = ctx.createLinearGradient(0, 0, 0, 256);
     gradient.addColorStop(0, hsvaToColorString({...hsva, a: 0}));

@@ -39,3 +39,11 @@ export function NavBar({title, rightButton, leftButton}) {
     </div>
   )
 }
+
+export let Tabs = ({tabs, labels, value, onChange}) => {
+  let renderTab = (tab) => {
+    let label = (labels || {})[tab] || tab;
+    return <div key={tab} className={tab === value ? 'selected' : null} onClick={() => onChange(tab)}>{label}</div>;
+  }
+  return <div className='Tabs'>{tabs.map(renderTab)}</div>;
+}

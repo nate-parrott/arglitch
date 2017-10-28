@@ -13,7 +13,7 @@
   bottom: 0;
   left: 0;
   width: 100%;
-  max-height: 75%;
+  max-height: 80%;
   background-color: rgba(0,0,0,0.7);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -112,4 +112,24 @@
   font-size: large;
   color: black;
   border-radius: 5px;
+}
+
+.Overlay .Tabs {
+  display: flex;
+  flex-direction: row;
+  color: white;
+}
+
+.Overlay .Tabs > * {
+  text-transform: uppercase;
+  opacity: 0.5;
+  padding: 20px;
+  font-size: small;
+  font-weight: bold;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.Overlay .Tabs > .selected {
+  opacity: 1;
 }

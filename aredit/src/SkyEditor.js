@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import tinycolor from 'tinycolor2';
 import { loadImage } from './util';
-import { hsvaToColorString, CanvasRenderer } from './ColorPicker';
+import ColorPicker, { hsvaToColorString } from './ColorPicker';
+import { NavBar, NavBarButton, Tabs } from './Overlay';
+import CanvasRenderer from './CanvasRenderer';
+import { Entity } from 'aframe-react';
 
-let defaultSky = {
+export let defaultSky = {
   horizonColor: '#76D2FF',
   skyColor: '#1798E2',
   starColor: 'red',
@@ -50,8 +53,11 @@ let createImageLoader = (url) => {
   });
 }
 
+let starImageLoader = createImageLoader('/stars.png');
+let cloudImageLoader = createImageLoader('/clouds.png');
+
 let renderSky = (sky, ctx, starImageLoader, cloudImageLoader, width, height, callback) => {
-  let gradient = ctx.createLinearGradient(0, 0, 0, 256);
+  let gradient = ctx.createLinearGradient(0, 0, 0, height);
   gradient.addColorStop(0, sky.skyColor);
   gradient.addColorStop(0.5, sky.horizonColor);
   ctx.fillStyle = gradient;
@@ -88,15 +94,51 @@ let renderSky = (sky, ctx, starImageLoader, cloudImageLoader, width, height, cal
   });
 }
 
+export let VRSkyComponent = ({sky}) => {
+  let skyCanvas = document.getElementById('skyCanvas');
+  let draw = (ctx, props) => {
+    renderSky(props.sky, ctx, starImageLoader, cloudImageLoader, skyCanvas.width, skyCanvas.height, () => {});
+  }
+  let canvasRenderer = <CanvasRenderer width={skyCanvas.width} height={skyCanvas.height} sky={sky || defaultSky} draw={draw} externalCanvas={skyCanvas} />;
+  return <Entity primitive='a-sky' src='#skyCanvas' draw-canvas='skyCanvas'>{canvasRenderer}</Entity>;
+}
+
 export default class SkyEditor extends Component {
   constructor(props) {
     super(props);
-    this.starImageLoader = createImageLoader('/stars.png');
-    this.cloudImageLoader = createImageLoader('/clouds.png');
+    this.state = {
+      sky: this.props.initialSky || defaultSky,
+      editingProperty: 'skyColor'
+    };
+  }
+  renderPreview() {
+    let w = 512;
+    let h = 200;
+    return <CanvasRenderer sky={this.state.sky} width={w} height={h} draw={(ctx, props) => renderSky(props.sky, ctx, starImageLoader, cloudImageLoader, w, h*2, () => {})} />;
+    
   }
   render() {
-    let w = 2048;
-    let h = 1024;
-    return <CanvasRenderer width={w} height={h} draw={(ctx) => renderSky(defaultSky, ctx, this.starImageLoader, this.cloudImageLoader, w, h, () => {})} />;
+    return (
+      <div className='SkyEditor'>
+        <NavBar title="Edit Sky" rightButton={<NavBarButton title="Apply" onClick={this.apply.bind(this)} />} />
+        {this.renderPreview()}
+        {this.renderTabs()}
+        {this.renderEditor()}
+      </div>
+    )
+  }
+  renderTabs() {
+    return <Tabs tabs={['horizonColor', 'skyColor', 'starColor', 'cloudColor']} labels={{horizonColor: 'horizon', skyColor: 'sky', starColor: 'stars', cloudColor: 'clouds'}} value={this.state.editingProperty} onChange={(v) => this.setState({editingProperty: v})} />;
+  }
+  renderEditor() {
+    let onChange = (color) => {
+      let sky = {...this.state.sky};
+      sky[this.state.editingProperty] = color;
+      this.setState({sky});
+    }
+    return <ColorPicker color={this.state.sky[this.state.editingProperty]} onChange={onChange} />;
+  }
+  apply() {
+    this.props.onChange(this.state.sky);
   }
 }
