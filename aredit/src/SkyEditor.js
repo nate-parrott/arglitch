@@ -9,7 +9,7 @@ import { Entity } from 'aframe-react';
 export let defaultSky = {
   horizonColor: '#76D2FF',
   skyColor: '#1798E2',
-  starColor: 'red',
+  starColor: 'transparent',
   cloudColor: 'white'
 }
 

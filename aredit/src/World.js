@@ -23,7 +23,7 @@ export default class World extends Component {
     let directionalLightOptions = {
       type: 'directional', 
       color: directional, 
-      intensity: 0.7, 
+      intensity: 0.9, 
       castShadow: true, 
       // shadowCameraVisible: true,
       shadowCameraBottom: shadowZ - shadowSize,
@@ -33,7 +33,7 @@ export default class World extends Component {
     }
     return [
       <Entity key='sun' position={{x: 0, y: 100, z: 0}} light={directionalLightOptions} />,
-      <Entity key='ambient' light={{type: 'ambient', color: ambient, intensity: 0.5 }} />
+      <Entity key='ambient' light={{type: 'ambient', color: ambient, intensity: 0.7 }} />
     ];
   }
 }
@@ -45,10 +45,12 @@ let Floor = () => {
 let computeLighting = (sky) => {
   let directional = mapColor(sky.skyColor, ({h,s,v,a}) => {
     v = Math.max(0.3, v);
+    s /= 2;
     return {h,s,v,a: 1};
   });
   let ambient = mapColor(sky.horizonColor, ({h,s,v,a}) => {
-    v = Math.max(0.2, Math.min(0.7, v));
+    v = Math.max(0.3, v);
+    s /= 2;
     return {h,s,v,a: 1};
   });
   return {directional, ambient};

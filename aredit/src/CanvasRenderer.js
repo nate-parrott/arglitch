@@ -21,11 +21,15 @@ export default class CanvasRenderer extends Component {
     }
   }
   draw() {
-    if (!equal(this.lastDrawnProps, this.props)) {
+    let props = {...this.props};
+    delete props.externalCanvas;
+    delete props.draw;
+    
+    if (!equal(this.lastDrawnProps, props)) {
       let canvas = this.props.externalCanvas || this.canvas;
       if (canvas) {
-        this.props.draw(canvas.getContext('2d'), this.props);
-        this.lastDrawnProps = this.props;
+        this.props.draw(canvas.getContext('2d'), props);
+        this.lastDrawnProps = props;
       }
     }
     this.requestedRedraw = false;
