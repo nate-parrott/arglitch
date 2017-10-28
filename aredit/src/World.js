@@ -2,14 +2,16 @@ import React, { Component } from 'react';
 import { Entity } from 'aframe-react';
 import { VRSkyComponent, defaultSky } from './SkyEditor';
 import { mapColor } from './color';
+import { materialPropForMaterialJson } from './material';
 
 export default class World extends Component {
   render() {
     let world = this.props.world || {};
     let sky = world.sky || defaultSky;
+    let ground = world.ground || {};
     return (
       <Entity>
-        <Floor />
+        <Ground ground={ground} />
         {this.renderLights(sky)}
         <VRSkyComponent sky={sky} />;
       </Entity>
@@ -38,8 +40,11 @@ export default class World extends Component {
   }
 }
 
-let Floor = () => {
-  return <Entity shadow={{cast: false}} primitive='a-plane' material={{src: '/grass.jpg', repeat: '200 200'}} position={{x: 0, y: -2, z: 0}} rotation={{x: -90, y: 0, z: 0}} scale={{ x: 1000, y: 1000, z: 1000 }} />;
+let defaultGroundMaterial = {src: '/grass.jpg'};
+
+let Ground = ({ground}) => {
+  let material = materialPropForMaterialJson(ground.material || defaultGroundMaterial, 300);
+  return <Entity shadow={{cast: false}} primitive='a-plane' material={material} position={{x: 0, y: -2, z: 0}} rotation={{x: -90, y: 0, z: 0}} scale={{ x: 1000, y: 1000, z: 1000 }} />;
 }
 
 let computeLighting = (sky) => {

@@ -22,4 +22,5 @@ let storage = firebase.storage();
 window.firebaseStorage = storage;
 
 ReactDOM.render(<App identifier={identifier} database={db} storage={storage} />, document.getElementById('root'));
+
 registerServiceWorker();

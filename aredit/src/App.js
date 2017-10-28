@@ -282,12 +282,13 @@ class App extends Component {
       let renderEditor = () => {
         return <EntityEditor pushOverlay={this.pushOverlay.bind(this)} id={id} entityRef={entityRef} materialsListRef={materialsListRef} getEntityValue={getEntityValue} onDuplicate={() => this.duplicateEntity(id)} dismiss={this.dismissOverlays.bind(this)} updateEntityProps={updateEntityProps} getEntityProps={getEntityProps} />;
       };
-      this.setState({overlayFunctions: [renderEditor]})
+      this.setState({overlayFunctions: [renderEditor]});
     }
   }
   editWorld() {
+    let materialsListRef = this.worldRef.child('materials');
     let renderEditor = () => {
-      return <WorldEditor pushOverlay={this.pushOverlay.bind(this)} world={this.state.world} worldRef={this.worldRef} />;
+      return <WorldEditor pushOverlay={this.pushOverlay.bind(this)} world={this.state.world} worldRef={this.worldRef} materialsListRef={materialsListRef} />;
     }
     this.setState({overlayFunctions: [renderEditor]});
   }

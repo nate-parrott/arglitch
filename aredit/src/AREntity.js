@@ -1,8 +1,9 @@
 import React from 'react';
 import { scaleAllAxes } from './util';
 import { Entity } from 'aframe-react';
-import { TRANSITION_DURATION } from './constants.js';
+import { TRANSITION_DURATION } from './constants';
 import equal from 'fast-deep-equal';
+import { materialPropForMaterialJson } from './material';
 
 let ANIMATABLE_PROPS = ['position', 'rotation', 'scale'];
 
@@ -12,10 +13,9 @@ let AREntity = ({id, value, transitioningFromValue, selected, dragState, gesture
   let material = null;
   if (selected) {
     material = {color: defaultSelectionColor};
-  } else if (value.material) {
-    material = {color: value.material.color, src: value.material.src};
   } else {
-    material = {color: '#e44'};
+    let materialJson = value.material || {color: '#e44'};
+    material = materialPropForMaterialJson(materialJson, 1);
   }
   
   let props = {};
