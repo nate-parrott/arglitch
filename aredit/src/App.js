@@ -17,6 +17,7 @@ import AREntity from './AREntity';
 import Camera from './Camera';
 import { clampScale } from './util';
 import { MAIN_SLIDE, SLIDE_PROPS, TRANSITION_DURATION } from './constants.js';
+import { ensureDefaultAssets }  from './defaultAssets';
 require('aframe-text-geometry-component');
 require('aframe-animation-component');
 
@@ -49,6 +50,7 @@ class App extends Component {
       this.setState({world: snapshot.val()});
     });
     this.shadowMapUpdateLoop();
+    ensureDefaultAssets(this.assetsRef());
   }
   componentWillUnmount() {
     if (this._shadowMapTimeout) clearTimeout(this._shadowMapTimeout);
@@ -270,12 +272,18 @@ class App extends Component {
   pushOverlay(renderFunc) {
     this.setState({overlayFunctions: this.state.overlayFunctions.concat([renderFunc])});
   }
+  assetsRef() {
+    return this.worldRef.child('assets');
+  }
+  materialsListRef() {
+    return this.assetsRef().child('materials');
+  }
   // CONTROL ACTIONS:
   editSelectedObject() {
     if (this.state.selection) {
       let id = this.state.selection.split(' ')[0];
       let entityRef = this.worldRef.child('entities').child(id);
-      let materialsListRef = this.worldRef.child('materials');
+      let materialsListRef = this.materialsListRef();
       let updateEntityProps = (props) => this.updatePropertiesForEntity(id, props);
       let getEntityProps = () => this.propertiesForEntity(id);
       let getEntityValue = () => this.state.world.entities[id];
@@ -286,7 +294,7 @@ class App extends Component {
     }
   }
   editWorld() {
-    let materialsListRef = this.worldRef.child('materials');
+    let materialsListRef = this.materialsListRef();
     let renderEditor = () => {
       return <WorldEditor pushOverlay={this.pushOverlay.bind(this)} world={this.state.world} worldRef={this.worldRef} materialsListRef={materialsListRef} />;
     }

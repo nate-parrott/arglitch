@@ -25,8 +25,8 @@ export default class World extends Component {
     let directionalLightOptions = {
       type: 'directional', 
       color: directional, 
-      intensity: 0.9, 
-      castShadow: true, 
+      intensity: 0.9,
+      castShadow: true,
       // shadowCameraVisible: true,
       shadowCameraBottom: shadowZ - shadowSize,
       shadowCameraTop: shadowZ + shadowSize,
