@@ -1,11 +1,11 @@
 import React from 'react';
 import { scaleAllAxes } from './util';
 import { Entity } from 'aframe-react';
-import { TRANSITION_DURATION } from './constants';
-import equal from 'fast-deep-equal';
+// import { TRANSITION_DURATION } from './constants';
+// import equal from 'fast-deep-equal';
 import { materialPropForMaterialJson } from './material';
 
-let ANIMATABLE_PROPS = ['position', 'rotation', 'scale'];
+// let ANIMATABLE_PROPS = ['position', 'rotation', 'scale'];
 
 let AREntity = ({id, value, transitioningFromValue, selected, dragState, gestureScale}) => {
   let defaultSelectionColor = '#37f';

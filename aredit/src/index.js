@@ -4,6 +4,7 @@ import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
 import firebase from 'firebase';
+import UserHome from './UserHome';
 const queryString = require('query-string');
 
 let query = queryString.parse(window.location.search);
@@ -21,6 +22,10 @@ let db = firebase.database();
 let storage = firebase.storage();
 window.firebaseStorage = storage;
 
-ReactDOM.render(<App identifier={identifier} database={db} storage={storage} />, document.getElementById('root'));
+if (query.world) {
+  ReactDOM.render(<App identifier={query.world} database={db} storage={storage} />, document.getElementById('root'));
+} else {
+  ReactDOM.render(<UserHome database={db} />, document.getElementById('root'));
+}
 
 registerServiceWorker();

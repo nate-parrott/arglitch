@@ -18,6 +18,8 @@ import Camera from './Camera';
 import { clampScale } from './util';
 import { MAIN_SLIDE, SLIDE_PROPS, TRANSITION_DURATION } from './constants.js';
 import { ensureDefaultAssets }  from './defaultAssets';
+import { getUserId } from './user';
+import './AppUI.css';
 require('aframe-text-geometry-component');
 require('aframe-animation-component');
 
@@ -51,6 +53,7 @@ class App extends Component {
     });
     this.shadowMapUpdateLoop();
     ensureDefaultAssets(this.assetsRef());
+    this.updateUserWorldMetadata('last_opened', +new Date());
   }
   componentWillUnmount() {
     if (this._shadowMapTimeout) clearTimeout(this._shadowMapTimeout);
@@ -334,9 +337,12 @@ class App extends Component {
   }
   showMenu() {
     let renderMenu = () => {
-      return <WorldMenu world={this.state.world || {}} pushOverlay={this.pushOverlay.bind(this)} worldRef={this.worldRef} currentSlide={this.state.currentSlide} onChangeSlide={this.changeSlide.bind(this)} />
+      return <WorldMenu world={this.state.world || {}} pushOverlay={this.pushOverlay.bind(this)} worldRef={this.worldRef} currentSlide={this.state.currentSlide} onChangeSlide={this.changeSlide.bind(this)} onTitleChanged={(t) => this.updateUserWorldMetadata('title', t)} />
     }
     this.setState({overlayFunctions: [renderMenu]});
+  }
+  updateUserWorldMetadata(key, val) {
+    this.props.database.ref('/users/' + getUserId() + '/worlds/' + this.props.identifier).child(key).set(val);
   }
 }
 

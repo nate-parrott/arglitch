@@ -39,10 +39,14 @@ export class FirebaseObserver extends Component {
     this.state = {value: null};
   }
   componentDidMount() {
-    this.props.firebaseRef.on('value', this.valueChanged.bind(this));
+    this.observer = this.valueChanged.bind(this);
+    this.props.firebaseRef.on('value', this.observer);
   }
   componentWillUnmount() {
-    this.props.firebaseRef.off('value', this.valueChanged.bind(this));
+    if (this.observer) {
+      this.props.firebaseRef.off('value', this.observer);
+      this.observer = null;
+    }
   }
   valueChanged(snapshot) {
     this.setState({value: snapshot.val()});

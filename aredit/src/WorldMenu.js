@@ -8,12 +8,16 @@ export default class WorldMenu extends Component {
       <div className='WorldMenu'>
         <input className='worldTitle' type='text' value={(this.props.world ? this.props.world.title : null) || ''} onChange={this.renameWorld.bind(this)} placeholder='Untitled World' />
         <SlidePicker world={this.props.world} worldRef={this.props.worldRef} currentSlide={this.props.currentSlide} onChangeSlide={this.props.onChangeSlide} />
-        <div className='fullWidthButton exit'>Exit this world</div>
+        <div className='fullWidthButton exit' onClick={this.exit.bind(this)}>Exit this world</div>
       </div>
     )
   }
   renameWorld(e) {
     this.props.worldRef.child('title').set(e.target.value);
+    this.props.onTitleChanged(e.target.value);
+  }
+  exit() {
+    window.location = '/';
   }
 }
 
