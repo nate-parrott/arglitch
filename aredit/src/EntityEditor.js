@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import StretchControl from './StretchControl';
 import TextEditor from './TextEditor';
 import MaterialPicker from './MaterialPicker';
+import FontAwesome from 'react-fontawesome';
+import { Option, ToggleOption } from './Overlay';
 
 export default class EntityEditor extends Component {
   constructor(props) {
@@ -9,16 +11,25 @@ export default class EntityEditor extends Component {
     this.state = {hasText: this.props.getEntityValue().primitive === 'text'};
   }
   render() {
-    let editText = this.state.hasText ? <li key='editText' onClick={this.editText.bind(this)}>Edit text</li> : null;
+    let entityValue = this.props.getEntityValue();
+    let isText = entityValue.primitive === 'text';
+    let editText = isText ? <Option key='edit-text' title="Edit text…" onClick={this.editText.bind(this)} /> : null;
+    let pointUp = entityValue.constraints && entityValue.constraints.xRotation === 0 && entityValue.constraints.zRotation === 0;
+    let setShouldPointUp = (on) => {
+      this.props.entityRef.child('constraints').child('xRotation').set(on ? 0 : null);
+      this.props.entityRef.child('constraints').child('zRotation').set(on ? 0 : null);
+    }
+    
     return (
       <div>
         <h1>Edit object</h1>
         <ul className='grid'>
-          <li onClick={this.stretch.bind(this)}>Stretch shape</li>
-          <li onClick={this.material.bind(this)}>Material...</li>
-          <li onClick={this.props.onDuplicate}>Duplicate</li>
-          <li onClick={this.delete.bind(this)}>Delete</li>
-          {editText}  
+          {editText}
+          <Option onClick={this.stretch.bind(this)} title="Stretch Shape…" icon="arrows" />
+          <Option onClick={this.material.bind(this)} title="Material…" icon="paint-brush" />
+          <Option onClick={this.props.onDuplicate} title="Duplicate" icon="clone" />
+          <Option onClick={this.delete.bind(this)} title="Delete" icon="trash" />
+          <ToggleOption title="Points upward" icon="arrow-up" isOn={pointUp} on={() => setShouldPointUp(true)} off={() => setShouldPointUp(false)} />
         </ul>
       </div>
     );

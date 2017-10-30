@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './Overlay.css';
 import FontAwesome from 'react-fontawesome';
+import { COLORS } from './constants';
 
 export default class Overlay extends Component {
   render() {
@@ -46,4 +47,18 @@ export let Tabs = ({tabs, labels, value, onChange}) => {
     return <div key={tab} className={tab === value ? 'selected' : null} onClick={() => onChange(tab)}>{label}</div>;
   }
   return <div className='Tabs'>{tabs.map(renderTab)}</div>;
+}
+
+export let Option = ({onClick, icon, title, selected}) => {
+  let fontAwesome = icon ? <FontAwesome name={icon} /> : null;
+  let style = {
+    backgroundColor: selected ? COLORS.red : undefined,
+    color: selected ? 'white' : undefined
+  };
+  return <li style={style} onClick={onClick}>{fontAwesome} {title}</li>;
+}
+
+export let ToggleOption = ({title, icon, isOn, on, off}) => {
+  let toggle = isOn ? off : on;
+  return <Option onClick={toggle} title={title} icon={icon} selected={isOn} />;
 }

@@ -4,6 +4,7 @@ import { Entity } from 'aframe-react';
 // import { TRANSITION_DURATION } from './constants';
 // import equal from 'fast-deep-equal';
 import { materialPropForMaterialJson } from './material';
+import './constraintsComponent';
 
 // let ANIMATABLE_PROPS = ['position', 'rotation', 'scale'];
 
@@ -35,6 +36,14 @@ let AREntity = ({id, value, transitioningFromValue, selected, dragState, gesture
     props.rotation = value.rotation;
     props.scale = value.scale || {x: 1, y: 1, z: 1};
     // props = {...props, ...animationProps(transitioningFromValue, value)};
+  }
+  
+  if (value.constraints) {
+    let constraints = {};
+    for (let key of ['xRotation', 'yRotation', 'zRotation']) {
+      constraints[key] = value.constraints[key];
+    }
+    props.constraints = constraints;
   }
   
   return <Entity data-entity-id={id} material={material} shadow={{receive: true}} {...props} />;

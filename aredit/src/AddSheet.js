@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
+import { Option } from './Overlay';
 
 let defaultMaterial = {color: '#e44'};
 
 let NewObjects = [
   {
     text: 'cube',
+    icon: 'cube',
     template: {material: defaultMaterial, primitive: 'box'}
   },
   {
     text: 'sphere',
+    icon: 'circle',
     template: {material: defaultMaterial, primitive: 'sphere'}
   },
   {
@@ -21,10 +24,12 @@ let NewObjects = [
   },
   {
     text: 'donut',
+    icon: 'circle-o',
     template: {material: defaultMaterial, primitive: 'torus'}
   },
   {
     text: 'text',
+    icon: 'font',
     template: {material: defaultMaterial, primitive: 'text', text: "Text"}
   }
 ]
@@ -42,7 +47,7 @@ export default class AddSheet extends Component {
   }
   renderItems() {
     return NewObjects.map((obj, i) => {
-      return <li key={i} onClick={() => this.insert(obj)}>{obj.text}</li>
+      return <Option key={i} onClick={() => this.insert(obj)} title={obj.text} icon={obj.icon || 'cubes'} />
     })
   }
   insert(obj) {

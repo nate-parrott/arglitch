@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import SkyEditor from './SkyEditor';
 import MaterialPicker from './MaterialPicker';
+import { Option } from './Overlay';
 
 export default class WorldEditor extends Component {
   constructor(props) {
@@ -12,8 +13,8 @@ export default class WorldEditor extends Component {
       <div>
         <h1>Edit world</h1>
         <ul className='grid'>
-          <li onClick={this.sky.bind(this)}>Sky...</li>
-          <li onClick={this.ground.bind(this)}>Ground...</li>
+          <Option onClick={this.sky.bind(this)} title="Sky…" icon="cloud" />
+          <Option onClick={this.ground.bind(this)} title="Ground…" icon="globe" />
         </ul>
       </div>
     );

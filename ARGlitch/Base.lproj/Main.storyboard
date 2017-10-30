@@ -18,7 +18,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="detailDisclosure" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="26R-uV-RgO">
-                                <rect key="frame" x="0.0" y="625" width="42" height="42"/>
+                                <rect key="frame" x="333" y="0.0" width="42" height="42"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
                                 <connections>
@@ -28,8 +28,8 @@
                         </subviews>
                         <color key="backgroundColor" red="0.98090088369999995" green="0.0" blue="0.33053958420000001" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="26R-uV-RgO" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="JaI-uq-6jv"/>
-                            <constraint firstItem="26R-uV-RgO" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="u1t-sg-yqK"/>
+                            <constraint firstItem="26R-uV-RgO" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="QpG-To-fIn"/>
+                            <constraint firstItem="26R-uV-RgO" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="qQj-lS-MVs"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
