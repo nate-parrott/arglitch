@@ -94,13 +94,25 @@ let renderSky = (sky, ctx, starImageLoader, cloudImageLoader, width, height, cal
   });
 }
 
-export let VRSkyComponent = ({sky}) => {
-  let skyCanvas = document.getElementById('skyCanvas');
-  let draw = (ctx, props) => {
-    renderSky(props.sky, ctx, starImageLoader, cloudImageLoader, skyCanvas.width, skyCanvas.height, () => {});
+export class VRSkyComponent extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {src: null};
   }
-  let canvasRenderer = <CanvasRenderer width={skyCanvas.width} height={skyCanvas.height} sky={sky || defaultSky} draw={draw} externalCanvas={skyCanvas} />;
-  return <Entity primitive='a-sky' src='#skyCanvas' draw-canvas='skyCanvas'>{canvasRenderer}</Entity>;
+  render() {
+    let w = 2048;
+    let h = 1024;
+    let draw = (ctx, props) => {
+      renderSky(props.sky, ctx, starImageLoader, cloudImageLoader, w, h, () => {});
+    }
+    let canvasRenderer = <CanvasRenderer width={w} height={h} renderProps={{sky: this.props.sky || defaultSky}} draw={draw} renderToImageUrl={this.setSrc.bind(this)} />;
+    return <Entity primitive='a-sky' src={this.state.src}>{canvasRenderer}</Entity>;
+  }
+  setSrc(url) {
+    console.log(url.length)
+    if (this.state.src) URL.revokeObjectURL(this.state.src);
+    this.setState({src: url});
+  }
 }
 
 export default class SkyEditor extends Component {
@@ -114,7 +126,7 @@ export default class SkyEditor extends Component {
   renderPreview() {
     let w = 512;
     let h = 200;
-    return <CanvasRenderer sky={this.state.sky} width={w} height={h} draw={(ctx, props) => renderSky(props.sky, ctx, starImageLoader, cloudImageLoader, w, h*2, () => {})} />;
+    return <CanvasRenderer renderProps={{sky: this.state.sky}} width={w} height={h} draw={(ctx, props) => renderSky(props.sky, ctx, starImageLoader, cloudImageLoader, w, h*2, () => {})} />;
     
   }
   render() {

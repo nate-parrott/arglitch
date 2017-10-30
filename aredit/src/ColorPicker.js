@@ -43,7 +43,7 @@ let HueSlider = ({hsva, grabber, onChange}) => {
     let draw = (ctx, props) => {
       ctx.drawImage(props.image, 0, 0, 1, 256);
     }
-    return <Slider value={hsva.h} grabber={grabber} onChange={onChange}><CanvasRenderer image={image} width="1" height="256" draw={draw}/></Slider>;
+    return <Slider value={hsva.h} grabber={grabber} onChange={onChange}><CanvasRenderer renderProps={{image: image}} width="1" height="256" draw={draw}/></Slider>;
   }
   return <div className='HueSlider'><ImageLoader src="/hue.png" render={render} /></div>;
 }
@@ -64,7 +64,7 @@ let SaturationSlider = ({hsva, grabber, onChange}) => {
   return (
     <div className='SaturationSlider'>
       <Slider value={hsva.s} grabber={grabber} onChange={onChange}>
-        <CanvasRenderer color={hsva} width="1" height="256" draw={draw} />
+        <CanvasRenderer renderProps={{color: hsva}} width="1" height="256" draw={draw} />
       </Slider>
     </div>
   );
@@ -82,7 +82,7 @@ let ValueSlider = ({hsva, grabber, onChange}) => {
   return (
     <div className='ValueSlider'>
       <Slider value={hsva.v} grabber={grabber} onChange={onChange}>
-        <CanvasRenderer color={hsva} width="1" height="256" draw={draw} />
+        <CanvasRenderer renderProps={{color: hsva}} width="1" height="256" draw={draw} />
       </Slider>
     </div>
   );
@@ -101,7 +101,7 @@ let AlphaSlider = ({hsva, grabber, onChange}) => {
   return (
     <div className='AlphaSlider'>
       <Slider value={hsva.a} grabber={grabber} onChange={onChange}>
-        <CanvasRenderer color={hsva} width="1" height="256" draw={draw} />
+        <CanvasRenderer renderProps={{color: hsva}} width="1" height="256" draw={draw} />
       </Slider>
     </div>
   );
