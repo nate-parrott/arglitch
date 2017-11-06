@@ -36,7 +36,7 @@ class ViewController: UIViewController, ARSessionDelegate, WKScriptMessageHandle
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        downloadModels(placeholderId: "id1")
+        // downloadModels(placeholderId: "id1")
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -76,7 +76,49 @@ class ViewController: UIViewController, ARSessionDelegate, WKScriptMessageHandle
     func downloadModels(placeholderId: String) {
         print("placeholder id: \(placeholderId)")
         let browser = storyboard!.instantiateViewController(withIdentifier: "DownloaderBrowser") as! DownloaderBrowser
+        browser.callback = { [weak self] (result) in
+            switch result {
+            case .cancelled: self?.deletePlaceholder(placeholderId)
+            case .choseUrl(let url): self?.startModelDownload(url: url, placeholderId: placeholderId)
+            }
+        }
         let nav = UINavigationController(rootViewController: browser)
         present(nav, animated: true, completion: nil)
+    }
+    
+    func deletePlaceholder(_ id: String) {
+        webView.evaluateJavaScript("resolveEditorPlaceholder(\(String.fromJSONObject(id)!), {action: 'delete'})", completionHandler: nil)
+    }
+    
+    func startModelDownload(url: URL, placeholderId: String) {
+        OBJTranscoderSession(zipUrl: url).start { [weak self] (result) in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(objUrl: let objUrl, mtlUrl: let mtlUrl):
+                    var dict: [String: Any] = ["obj": objUrl.absoluteString]
+                    if let mtl = mtlUrl { dict["mtl"] = mtl }
+                    let resolution: [String: Any] = ["action": "update", "objModel": dict]
+                    
+                    let quotedId = String.fromJSONObject(placeholderId)!
+                    let quotedResolution = String.fromJSONObject(resolution)!
+                    let js = "resolveEditorPlaceholder(\(quotedId), \(quotedResolution))"
+                    print("Resolving model download with JS: \(js)")
+                    self?.webView.evaluateJavaScript(js, completionHandler: nil)
+                case .fileTooBig:
+                    self?.deletePlaceholder(placeholderId)
+                    self?.showError(title: "🚨 File is too large 👎", description: "For your safety and ours, files larger than 10MB can’t be loaded this way.")
+                case .failure(let err):
+                    self?.deletePlaceholder(placeholderId)
+                    print("Model download error: \(err ?? "<unknown>")")
+                    self?.showError(title: "🚨 Failed to add model 😢", description: "For your safety and ours, files larger than 10MB can’t be loaded this way.")
+                }
+            }
+        }
+    }
+    
+    func showError(title: String, description: String) {
+        let alert = UIAlertController(title: title, message: description, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Okay", style: .cancel, handler: nil))
+        present(alert, animated: true, completion: nil)
     }
 }

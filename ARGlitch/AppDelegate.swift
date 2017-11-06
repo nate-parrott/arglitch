@@ -23,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        session!.start { (result) in
 //            print("Result: \(result)")
 //        }
+        
         return true
     }
     

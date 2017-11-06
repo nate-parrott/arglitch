@@ -54,6 +54,7 @@ class App extends Component {
     this.shadowMapUpdateLoop();
     ensureDefaultAssets(this.assetsRef());
     this.updateUserWorldMetadata('last_opened', +new Date());
+    this.bindEditorPlaceholderHooks();
   }
   componentWillUnmount() {
     if (this._shadowMapTimeout) clearTimeout(this._shadowMapTimeout);
@@ -343,6 +344,18 @@ class App extends Component {
   }
   updateUserWorldMetadata(key, val) {
     this.props.database.ref('/users/' + getUserId() + '/worlds/' + this.props.identifier).child(key).set(val);
+  }
+  bindEditorPlaceholderHooks() {
+    window.resolveEditorPlaceholder = (entityId, options) => {
+      let ref = this.firebaseRefForEntity(entityId);
+      if (options.action === 'delete') {
+        ref.delete();
+      } else if (options.action === 'update' && options.objModel) {
+        ref.child('objModel').set(options.objModel);
+        ref.child('primitive').delete();
+        ref.child('placeholder').delete(); // unmark this as a placeholder
+      }
+    }
   }
 }
 

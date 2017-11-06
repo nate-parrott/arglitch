@@ -10,17 +10,30 @@ import UIKit
 import WebKit
 
 class DownloaderBrowser : UIViewController, WKNavigationDelegate, UITextFieldDelegate {
+    // MARK: External API
+    enum Result {
+        case cancelled
+        case choseUrl(URL)
+    }
+    var callback: ((Result) -> ())?
+    
+    // TODO: if a user navigates to a zip or obj file, we should try to download it
+    
     // MARK: IB
     @IBOutlet var webView: WKWebView!
     @IBOutlet var urlField: UITextField!
     @IBOutlet var downloadDetectedFileButton: UIButton!
     
-    @IBAction func dismiss() {
+    @IBAction func cancel() {
         navigationController?.dismiss(animated: true, completion: nil)
+        callback?(.cancelled)
     }
     
     @IBAction func downloadDetected() {
-        
+        if let url = detectedDownloadUrl {
+            navigationController?.dismiss(animated: true, completion: nil)
+            chose(url: url)
+        }
     }
     
     @IBAction func goBack() {
@@ -73,6 +86,10 @@ class DownloaderBrowser : UIViewController, WKNavigationDelegate, UITextFieldDel
         }
         textField.resignFirstResponder()
         return false
+    }
+    
+    func chose(url: URL) {
+        navigationController?.dismiss(animated: true, completion: nil)
     }
     
     // MARK: Status update loop

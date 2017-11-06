@@ -35,7 +35,7 @@ let NewObjects = [
   {
     text: '3d model',
     icon: 'cloud-download',
-    template: {material: defaultMaterial, primitive: 'sphere'},
+    template: {material: defaultMaterial, primitive: 'sphere', placeholder: true},
     placeholderFor3dModel: true
   }
 ]

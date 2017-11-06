@@ -113,7 +113,7 @@
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Close" style="done" id="LXg-Up-YXC">
                             <connections>
-                                <action selector="dismiss" destination="Pr2-zi-0gu" id="kOL-cv-h8N"/>
+                                <action selector="cancel" destination="Pr2-zi-0gu" id="ITa-TJ-9Jq"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

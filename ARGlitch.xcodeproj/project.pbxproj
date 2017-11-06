@@ -13,6 +13,7 @@
 		5F105AB21FB0492800660202 /* OBJTranscoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F105AB11FB0492700660202 /* OBJTranscoder.swift */; };
 		5F28E4F01FB10DEB0078A72A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5F28E4EF1FB10DEB0078A72A /* GoogleService-Info.plist */; };
 		5F28E4F21FB116990078A72A /* ZipExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F28E4F11FB116990078A72A /* ZipExtensions.swift */; };
+		5F28E4F41FB122B30078A72A /* JsonString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F28E4F31FB122B30078A72A /* JsonString.swift */; };
 		5F5A29E61F84AF5700861E65 /* ARCamera+Decompose.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F5A29E51F84AF5700861E65 /* ARCamera+Decompose.m */; };
 		5FC574131F84A5A600E36CAF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FC574121F84A5A600E36CAF /* AppDelegate.swift */; };
 		5FC574151F84A5A600E36CAF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FC574141F84A5A600E36CAF /* ViewController.swift */; };
@@ -32,6 +33,7 @@
 		5F105AB11FB0492700660202 /* OBJTranscoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBJTranscoder.swift; sourceTree = "<group>"; };
 		5F28E4EF1FB10DEB0078A72A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		5F28E4F11FB116990078A72A /* ZipExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZipExtensions.swift; sourceTree = "<group>"; };
+		5F28E4F31FB122B30078A72A /* JsonString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonString.swift; sourceTree = "<group>"; };
 		5F5A29E31F84AF5700861E65 /* ARGlitch-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ARGlitch-Bridging-Header.h"; sourceTree = "<group>"; };
 		5F5A29E41F84AF5700861E65 /* ARCamera+Decompose.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ARCamera+Decompose.h"; sourceTree = "<group>"; };
 		5F5A29E51F84AF5700861E65 /* ARCamera+Decompose.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ARCamera+Decompose.m"; sourceTree = "<group>"; };
@@ -95,6 +97,7 @@
 				5F105AAF1FB03C9600660202 /* DownloaderBrowser.swift */,
 				5F105AB11FB0492700660202 /* OBJTranscoder.swift */,
 				5F28E4F11FB116990078A72A /* ZipExtensions.swift */,
+				5F28E4F31FB122B30078A72A /* JsonString.swift */,
 				5FC574161F84A5A600E36CAF /* Main.storyboard */,
 				5FC574191F84A5A600E36CAF /* Assets.xcassets */,
 				5FC5741B1F84A5A600E36CAF /* LaunchScreen.storyboard */,
@@ -254,6 +257,7 @@
 				5F28E4F21FB116990078A72A /* ZipExtensions.swift in Sources */,
 				5F014EEF1FA17EB5001E1BD1 /* URLPickerTableViewController.swift in Sources */,
 				5F5A29E61F84AF5700861E65 /* ARCamera+Decompose.m in Sources */,
+				5F28E4F41FB122B30078A72A /* JsonString.swift in Sources */,
 				5F105AB01FB03C9600660202 /* DownloaderBrowser.swift in Sources */,
 				5FC574131F84A5A600E36CAF /* AppDelegate.swift in Sources */,
 				5F014EED1FA17BD6001E1BD1 /* Model.swift in Sources */,
