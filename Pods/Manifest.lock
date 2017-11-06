@@ -1,4 +1,10 @@
 PODS:
+  - Firebase/Core (4.5.0):
+    - FirebaseAnalytics (= 4.0.4)
+    - FirebaseCore (= 4.0.10)
+  - Firebase/Storage (4.5.0):
+    - Firebase/Core
+    - FirebaseStorage (= 2.0.2)
   - FirebaseAnalytics (4.0.4):
     - FirebaseCore (~> 4.0)
     - FirebaseInstanceID (~> 2.0)
@@ -24,10 +30,12 @@ PODS:
   - ZIPFoundation (0.9.2)
 
 DEPENDENCIES:
-  - FirebaseStorage
+  - Firebase/Core
+  - Firebase/Storage
   - ZIPFoundation
 
 SPEC CHECKSUMS:
+  Firebase: d83d287bdb6b1c78320561482706d1fcfc8ddfc1
   FirebaseAnalytics: 722b53c7b32bfc7806b06e0093a2f5180d4f2c5a
   FirebaseCore: da5e8e372cb6046212739a4d81e42d32c22907cc
   FirebaseInstanceID: f2b688c66b972f30d7fa9f5f9f91455454a03b47
@@ -37,6 +45,6 @@ SPEC CHECKSUMS:
   nanopb: 5601e6bca2dbf1ed831b519092ec110f66982ca3
   ZIPFoundation: f9c416cd08d40fbc2f93efa818c41ebef1ba66ad
 
-PODFILE CHECKSUM: 6f13d106e993f9702a703f5cbf1f67131ae63172
+PODFILE CHECKSUM: cf4b17db0c7e0ead4781c1aa5a8da9b918eb7728
 
 COCOAPODS: 1.3.1

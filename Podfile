@@ -7,6 +7,7 @@ target 'ARGlitch' do
 
   # Pods for ARGlitch
   pod 'ZIPFoundation'
-  pod 'FirebaseStorage'
+  pod 'Firebase/Core'
+  pod 'Firebase/Storage'
 
 end

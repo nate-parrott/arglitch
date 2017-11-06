@@ -35,21 +35,32 @@ class DownloaderBrowser : UIViewController, WKNavigationDelegate, UITextFieldDel
         webView.load(URLRequest(url: URL(string: defaultUrl)!))
     }
     
-    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
-        detectedDownloadUrl = nil
-        if !urlField.isFirstResponder {
-            urlField.text = webView.url?.absoluteString ?? ""
-        }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        statusLoopRunning = true
     }
     
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        detectedDownloadUrl = detectDownloadUrl()
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(true)
+        statusLoopRunning = false
     }
+    
+//    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+//        detectedDownloadUrl = nil
+//        if !urlField.isFirstResponder {
+//            urlField.text = webView.url?.absoluteString ?? ""
+//        }
+//    }
+//
+//    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+//        detectDownloadUrl()
+//    }
     
     // MARK: UI
     
     var detectedDownloadUrl: URL? {
         didSet {
+            if let url = detectedDownloadUrl { print("Detected url: \(url)") }
             downloadDetectedFileButton.isHidden = (detectedDownloadUrl == nil)
         }
     }
@@ -64,11 +75,52 @@ class DownloaderBrowser : UIViewController, WKNavigationDelegate, UITextFieldDel
         return false
     }
     
+    // MARK: Status update loop
+    var statusLoopRunning = false {
+        didSet {
+            if statusLoopRunning {
+                if statusLoopTimer == nil {
+                    statusLoop()
+                    statusLoopTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: { [weak self] (_) in
+                        self?.statusLoop()
+                    })
+                }
+            } else {
+                statusLoopTimer?.invalidate()
+                statusLoopTimer = nil
+            }
+        }
+    }
+    
+    var statusLoopTimer: Timer?
+    
+    func statusLoop() {
+        if !urlField.isFirstResponder {
+            urlField.text = webView.url?.absoluteString ?? ""
+        }
+        detectDownloadUrl()
+    }
+    
     // MARK: Helpers
     
-    func detectDownloadUrl() -> URL? {
-        return nil
-        // TODO
+    func detectDownloadUrl() {
+        let js = """
+        (function() {
+          let results = Array.from(document.querySelectorAll('[jsname]')).map((node) => node.getAttribute('data-value')).filter((v) => v && v.endsWith('.zip') && v.startsWith('https://vr.google.com/downloads/'));
+          return results.length ? results[0] : null;
+        })()
+"""
+        webView.evaluateJavaScript(js) { (result, err) in
+            if let e = err {
+                print("Error detecting model download url: \(e)")
+            } else {
+                if let urlString = result as? String, let url = URL(string: urlString) {
+                    self.detectedDownloadUrl = url
+                } else {
+                    self.detectedDownloadUrl = nil
+                }
+            }
+        }
     }
     
     func createURL(from string: String) -> URL? {
