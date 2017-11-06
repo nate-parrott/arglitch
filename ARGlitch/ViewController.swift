@@ -10,12 +10,18 @@ import UIKit
 import WebKit
 import ARKit
 
-class ViewController: UIViewController, ARSessionDelegate {
-    let webView = WKWebView()
+class ViewController: UIViewController, ARSessionDelegate, WKScriptMessageHandler {
+    var webView: WKWebView!
     let session = ARSession()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // setup web view:
+        let conf = WKWebViewConfiguration()
+        let contentController = WKUserContentController()
+        contentController.add(self, name: "downloadModels")
+        conf.userContentController = contentController
+        webView = WKWebView(frame: .zero, configuration: conf)
         webView.customUserAgent = "ARGlitch-!ARKit!"
         view.insertSubview(webView, at: 0)
         reload()
@@ -26,6 +32,11 @@ class ViewController: UIViewController, ARSessionDelegate {
         NotificationCenter.default.addObserver(forName: Model.shared.URLChangedNotification, object: nil, queue: nil) { [weak self] (_) in
             self?.reload()
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        downloadModels(placeholderId: "id1")
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -52,5 +63,20 @@ class ViewController: UIViewController, ARSessionDelegate {
     
     func reload() {
         webView.load(URLRequest(url: Model.shared.selectedURL))
+    }
+    
+    // MARK: WebView bridge
+    
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        if message.name == "downloadModels", let params = message.body as? [String: Any], let placeholderId = params["placeholderId"] as? String {
+            downloadModels(placeholderId: placeholderId)
+        }
+    }
+    
+    func downloadModels(placeholderId: String) {
+        print("placeholder id: \(placeholderId)")
+        let browser = storyboard!.instantiateViewController(withIdentifier: "DownloaderBrowser") as! DownloaderBrowser
+        let nav = UINavigationController(rootViewController: browser)
+        present(nav, animated: true, completion: nil)
     }
 }

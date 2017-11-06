@@ -38,6 +38,96 @@
             </objects>
             <point key="canvasLocation" x="-526" y="22"/>
         </scene>
+        <!--Download Objects-->
+        <scene sceneID="8mj-5A-2YN">
+            <objects>
+                <viewController storyboardIdentifier="DownloaderBrowser" title="Download Objects" id="Pr2-zi-0gu" customClass="DownloaderBrowser" customModule="ARGlitch" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="CRh-Np-xmw">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <wkWebView contentMode="scaleToFill" allowsBackForwardNavigationGestures="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Uro-yi-Daf">
+                                <rect key="frame" x="0.0" y="108" width="375" height="559"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <wkWebViewConfiguration key="configuration">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="24B-Ga-3w9">
+                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
+                                <color key="backgroundColor" red="0.9951513409614563" green="0.16694861650466919" blue="0.40275093913078308" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="X5q-sI-ezZ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="18"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Download Model"/>
+                                <connections>
+                                    <action selector="downloadDetected" destination="Pr2-zi-0gu" eventType="touchUpInside" id="IZb-NX-kM5"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CbQ-Ut-krm">
+                                <rect key="frame" x="0.0" y="64" width="375" height="44"/>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Lm8-vA-guD">
+                                        <rect key="frame" x="8" y="0.0" width="359" height="46"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="webSearch"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="Pr2-zi-0gu" id="1ak-dr-kd5"/>
+                                        </connections>
+                                    </textField>
+                                </subviews>
+                                <color key="backgroundColor" white="0.939208984375" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="Lm8-vA-guD" secondAttribute="bottom" id="5ac-FF-P9a"/>
+                                    <constraint firstItem="Lm8-vA-guD" firstAttribute="leading" secondItem="CbQ-Ut-krm" secondAttribute="leading" constant="8" id="6h7-Y3-uQD"/>
+                                    <constraint firstItem="Lm8-vA-guD" firstAttribute="top" secondItem="CbQ-Ut-krm" secondAttribute="top" id="AXE-Fl-L83"/>
+                                    <constraint firstAttribute="height" constant="44" id="Bpe-QQ-pgZ"/>
+                                    <constraint firstAttribute="trailing" secondItem="Lm8-vA-guD" secondAttribute="trailing" constant="8" id="kOj-oN-B6p"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Uro-yi-Daf" firstAttribute="top" secondItem="CbQ-Ut-krm" secondAttribute="bottom" id="1mO-pW-AUq"/>
+                            <constraint firstItem="CbQ-Ut-krm" firstAttribute="leading" secondItem="bCm-T6-cKb" secondAttribute="leading" id="44X-Pd-myB"/>
+                            <constraint firstItem="24B-Ga-3w9" firstAttribute="trailing" secondItem="bCm-T6-cKb" secondAttribute="trailing" id="ADK-Ud-88j"/>
+                            <constraint firstItem="CbQ-Ut-krm" firstAttribute="top" secondItem="bCm-T6-cKb" secondAttribute="top" id="LUF-m8-eZb"/>
+                            <constraint firstItem="CbQ-Ut-krm" firstAttribute="trailing" secondItem="bCm-T6-cKb" secondAttribute="trailing" id="RH4-RX-9qc"/>
+                            <constraint firstItem="Uro-yi-Daf" firstAttribute="trailing" secondItem="bCm-T6-cKb" secondAttribute="trailing" id="Scm-0N-kag"/>
+                            <constraint firstItem="24B-Ga-3w9" firstAttribute="leading" secondItem="bCm-T6-cKb" secondAttribute="leading" id="YcT-ga-2CQ"/>
+                            <constraint firstItem="24B-Ga-3w9" firstAttribute="bottom" secondItem="bCm-T6-cKb" secondAttribute="bottom" id="gzI-Zi-pdY"/>
+                            <constraint firstItem="Uro-yi-Daf" firstAttribute="bottom" secondItem="bCm-T6-cKb" secondAttribute="bottom" id="lKX-EY-fsA"/>
+                            <constraint firstItem="Uro-yi-Daf" firstAttribute="leading" secondItem="bCm-T6-cKb" secondAttribute="leading" id="rCG-JK-W0P"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="bCm-T6-cKb"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Download 3D Models" id="h4o-nj-UAW">
+                        <barButtonItem key="leftBarButtonItem" title="←" id="UVY-T8-Uda">
+                            <connections>
+                                <action selector="goBack" destination="Pr2-zi-0gu" id="ekc-yU-SuR"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Close" style="done" id="LXg-Up-YXC">
+                            <connections>
+                                <action selector="dismiss" destination="Pr2-zi-0gu" id="kOL-cv-h8N"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="downloadDetectedFileButton" destination="24B-Ga-3w9" id="4pQ-LD-Pdk"/>
+                        <outlet property="urlField" destination="Lm8-vA-guD" id="04x-PI-Mqt"/>
+                        <outlet property="webView" destination="Uro-yi-Daf" id="twN-Sf-cHR"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="t1z-vU-x39" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="333.60000000000002" y="33.733133433283363"/>
+        </scene>
         <!--App URL-->
         <scene sceneID="N45-5P-G31">
             <objects>

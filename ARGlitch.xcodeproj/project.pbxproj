@@ -9,17 +9,25 @@
 /* Begin PBXBuildFile section */
 		5F014EED1FA17BD6001E1BD1 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F014EEC1FA17BD6001E1BD1 /* Model.swift */; };
 		5F014EEF1FA17EB5001E1BD1 /* URLPickerTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F014EEE1FA17EB5001E1BD1 /* URLPickerTableViewController.swift */; };
+		5F105AB01FB03C9600660202 /* DownloaderBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F105AAF1FB03C9600660202 /* DownloaderBrowser.swift */; };
+		5F105AB21FB0492800660202 /* OBJTranscoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F105AB11FB0492700660202 /* OBJTranscoder.swift */; };
 		5F5A29E61F84AF5700861E65 /* ARCamera+Decompose.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F5A29E51F84AF5700861E65 /* ARCamera+Decompose.m */; };
 		5FC574131F84A5A600E36CAF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FC574121F84A5A600E36CAF /* AppDelegate.swift */; };
 		5FC574151F84A5A600E36CAF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FC574141F84A5A600E36CAF /* ViewController.swift */; };
 		5FC574181F84A5A600E36CAF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5FC574161F84A5A600E36CAF /* Main.storyboard */; };
 		5FC5741A1F84A5A600E36CAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5FC574191F84A5A600E36CAF /* Assets.xcassets */; };
 		5FC5741D1F84A5A600E36CAF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5FC5741B1F84A5A600E36CAF /* LaunchScreen.storyboard */; };
+		86A0B945D6E79532EE9A87A8 /* Pods_ARGlitch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C4F13FE6ED76ECB67EB12A8 /* Pods_ARGlitch.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		006CF8FDA33604A7F800DF71 /* Pods-ARGlitch.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARGlitch.release.xcconfig"; path = "Pods/Target Support Files/Pods-ARGlitch/Pods-ARGlitch.release.xcconfig"; sourceTree = "<group>"; };
+		15F25EC4198B0BF4C24C3215 /* Pods-ARGlitch.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ARGlitch.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ARGlitch/Pods-ARGlitch.debug.xcconfig"; sourceTree = "<group>"; };
+		5C4F13FE6ED76ECB67EB12A8 /* Pods_ARGlitch.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ARGlitch.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F014EEC1FA17BD6001E1BD1 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		5F014EEE1FA17EB5001E1BD1 /* URLPickerTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLPickerTableViewController.swift; sourceTree = "<group>"; };
+		5F105AAF1FB03C9600660202 /* DownloaderBrowser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloaderBrowser.swift; sourceTree = "<group>"; };
+		5F105AB11FB0492700660202 /* OBJTranscoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OBJTranscoder.swift; sourceTree = "<group>"; };
 		5F5A29E31F84AF5700861E65 /* ARGlitch-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ARGlitch-Bridging-Header.h"; sourceTree = "<group>"; };
 		5F5A29E41F84AF5700861E65 /* ARCamera+Decompose.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ARCamera+Decompose.h"; sourceTree = "<group>"; };
 		5F5A29E51F84AF5700861E65 /* ARCamera+Decompose.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ARCamera+Decompose.m"; sourceTree = "<group>"; };
@@ -37,17 +45,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86A0B945D6E79532EE9A87A8 /* Pods_ARGlitch.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		49B88F2DEA0D549B3C2380A9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				15F25EC4198B0BF4C24C3215 /* Pods-ARGlitch.debug.xcconfig */,
+				006CF8FDA33604A7F800DF71 /* Pods-ARGlitch.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		5FC574061F84A5A600E36CAF = {
 			isa = PBXGroup;
 			children = (
 				5FC574111F84A5A600E36CAF /* ARGlitch */,
 				5FC574101F84A5A600E36CAF /* Products */,
+				49B88F2DEA0D549B3C2380A9 /* Pods */,
+				B7A04FE9B28F5535900B3628 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -68,6 +88,8 @@
 				5F014EEC1FA17BD6001E1BD1 /* Model.swift */,
 				5F5A29E41F84AF5700861E65 /* ARCamera+Decompose.h */,
 				5F5A29E51F84AF5700861E65 /* ARCamera+Decompose.m */,
+				5F105AAF1FB03C9600660202 /* DownloaderBrowser.swift */,
+				5F105AB11FB0492700660202 /* OBJTranscoder.swift */,
 				5FC574161F84A5A600E36CAF /* Main.storyboard */,
 				5FC574191F84A5A600E36CAF /* Assets.xcassets */,
 				5FC5741B1F84A5A600E36CAF /* LaunchScreen.storyboard */,
@@ -77,6 +99,14 @@
 			path = ARGlitch;
 			sourceTree = "<group>";
 		};
+		B7A04FE9B28F5535900B3628 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5C4F13FE6ED76ECB67EB12A8 /* Pods_ARGlitch.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -84,9 +114,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5FC574211F84A5A600E36CAF /* Build configuration list for PBXNativeTarget "ARGlitch" */;
 			buildPhases = (
+				A62F598F05382B58EC5F5FA6 /* [CP] Check Pods Manifest.lock */,
 				5FC5740B1F84A5A600E36CAF /* Sources */,
 				5FC5740C1F84A5A600E36CAF /* Frameworks */,
 				5FC5740D1F84A5A600E36CAF /* Resources */,
+				30F0AC6579BE3C3071449D15 /* [CP] Embed Pods Frameworks */,
+				3BCF58968B3264E79B6B086B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -145,6 +178,66 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		30F0AC6579BE3C3071449D15 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ARGlitch/Pods-ARGlitch-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
+				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/ZIPFoundation/ZIPFoundation.framework",
+				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ZIPFoundation.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ARGlitch/Pods-ARGlitch-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3BCF58968B3264E79B6B086B /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ARGlitch/Pods-ARGlitch-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		A62F598F05382B58EC5F5FA6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ARGlitch-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		5FC5740B1F84A5A600E36CAF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -153,8 +246,10 @@
 				5FC574151F84A5A600E36CAF /* ViewController.swift in Sources */,
 				5F014EEF1FA17EB5001E1BD1 /* URLPickerTableViewController.swift in Sources */,
 				5F5A29E61F84AF5700861E65 /* ARCamera+Decompose.m in Sources */,
+				5F105AB01FB03C9600660202 /* DownloaderBrowser.swift in Sources */,
 				5FC574131F84A5A600E36CAF /* AppDelegate.swift in Sources */,
 				5F014EED1FA17BD6001E1BD1 /* Model.swift in Sources */,
+				5F105AB21FB0492800660202 /* OBJTranscoder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,6 +384,7 @@
 		};
 		5FC574221F84A5A600E36CAF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 15F25EC4198B0BF4C24C3215 /* Pods-ARGlitch.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -307,6 +403,7 @@
 		};
 		5FC574231F84A5A600E36CAF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 006CF8FDA33604A7F800DF71 /* Pods-ARGlitch.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

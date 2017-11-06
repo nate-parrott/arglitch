@@ -31,6 +31,12 @@ let NewObjects = [
     text: 'text',
     icon: 'font',
     template: {material: defaultMaterial, primitive: 'text', text: "Text"}
+  },
+  {
+    text: '3d model',
+    icon: 'cloud-download',
+    template: {material: defaultMaterial, primitive: 'sphere'},
+    placeholderFor3dModel: true
   }
 ]
 
@@ -53,7 +59,11 @@ export default class AddSheet extends Component {
   insert(obj) {
     let {position, rotation} = this.props.getWorldPositionAndRotation();
     let value = {position, rotation, ...(obj.template)};
-    this.props.worldRef.child('entities').push().set(value);
+    let childRef = this.props.worldRef.child('entities').push().set(value);
+    let id = childRef.key;
     this.props.onDone();
+    if (obj.placeholderFor3dModel) {
+      window.webkit.messageHandlers.downloadModels.postMessage({placeholderId: id});
+    }
   }
 }
