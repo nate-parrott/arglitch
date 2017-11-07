@@ -352,8 +352,8 @@ class App extends Component {
         ref.delete();
       } else if (options.action === 'update' && options.objModel) {
         ref.child('objModel').set(options.objModel);
-        ref.child('primitive').delete();
-        ref.child('placeholder').delete(); // unmark this as a placeholder
+        ref.child('primitive').remove();
+        ref.child('placeholder').remove(); // unmark this as a placeholder
       }
     }
   }

@@ -59,10 +59,12 @@ export default class AddSheet extends Component {
   insert(obj) {
     let {position, rotation} = this.props.getWorldPositionAndRotation();
     let value = {position, rotation, ...(obj.template)};
-    let childRef = this.props.worldRef.child('entities').push().set(value);
+    let childRef = this.props.worldRef.child('entities').push();
+    childRef.set(value);
     let id = childRef.key;
     this.props.onDone();
     if (obj.placeholderFor3dModel) {
+      console.log({placeholderId: id})
       window.webkit.messageHandlers.downloadModels.postMessage({placeholderId: id});
     }
   }
