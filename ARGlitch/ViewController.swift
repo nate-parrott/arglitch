@@ -87,19 +87,19 @@ class ViewController: UIViewController, ARSessionDelegate, WKScriptMessageHandle
     }
     
     func deletePlaceholder(_ id: String) {
-        webView.evaluateJavaScript("resolveEditorPlaceholder(\(String.fromJSONObject(id)!), {action: 'delete'})", completionHandler: nil)
+        webView.evaluateJavaScript("resolveEditorPlaceholder('\(id)'), {action: 'delete'})", completionHandler: nil)
     }
     
     func startModelDownload(url: URL, placeholderId: String) {
         OBJTranscoderSession(zipUrl: url).start { [weak self] (result) in
             DispatchQueue.main.async {
                 switch result {
-                case .success(objUrl: let objUrl, mtlUrl: let mtlUrl):
+                case .success(objUrl: let objUrl, mtlUrl: let mtlUrlOpt):
                     var dict: [String: Any] = ["obj": objUrl.absoluteString]
-                    if let mtl = mtlUrl { dict["mtl"] = mtl }
+                    if let mtlUrl = mtlUrlOpt { dict["mtl"] = mtlUrl.absoluteString }
                     let resolution: [String: Any] = ["action": "update", "objModel": dict]
                     
-                    let quotedId = String.fromJSONObject(placeholderId)!
+                    let quotedId = "'" + placeholderId + "'"
                     let quotedResolution = String.fromJSONObject(resolution)!
                     let js = "resolveEditorPlaceholder(\(quotedId), \(quotedResolution))"
                     print("Resolving model download with JS: \(js)")

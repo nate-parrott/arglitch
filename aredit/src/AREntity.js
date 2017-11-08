@@ -20,10 +20,10 @@ let AREntity = ({id, value, transitioningFromValue, selected, dragState, gesture
   }
   
   let props = {};
+  props.geometry = {primitive: 'sphere'}; // text and .obj gemoetry is loaded async, but raycaster crashes if we have a mesh with empty geometry; work around this by initializing with a box primitive (which will be instantiated immediately)
   if (value.objModel) {
     props['obj-model'] = value.objModel;
   } else if (value.primitive === 'text') {
-    props.geometry = {primitive: 'box'}; // text geo is loaded async, but raycaster crashes if we have a mesh with empty geometry; work around this by initializing with a box primitive (which will be instantiated immediately) and follow up by adding a text component
     props['text-geometry'] = {value: value.text};
   } else {
     props.geometry = {primitive: value.primitive || 'box'};

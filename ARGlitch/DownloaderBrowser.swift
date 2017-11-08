@@ -90,6 +90,7 @@ class DownloaderBrowser : UIViewController, WKNavigationDelegate, UITextFieldDel
     
     func chose(url: URL) {
         navigationController?.dismiss(animated: true, completion: nil)
+        callback?(.choseUrl(url))
     }
     
     // MARK: Status update loop

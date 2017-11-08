@@ -19,6 +19,7 @@ import { clampScale } from './util';
 import { MAIN_SLIDE, SLIDE_PROPS, TRANSITION_DURATION } from './constants.js';
 import { ensureDefaultAssets }  from './defaultAssets';
 import { getUserId } from './user';
+import equal from 'fast-deep-equal';
 import './AppUI.css';
 require('aframe-text-geometry-component');
 require('aframe-animation-component');
@@ -60,10 +61,10 @@ class App extends Component {
     if (this._shadowMapTimeout) clearTimeout(this._shadowMapTimeout);
     delete this._shadowMapTimeout;
   }
+  shouldComponentUpdate(nextProps, nextState) {
+    return !equal(this.props, nextProps) || !equal(this.state, nextState);
+  }
   render() {
-    // return <ColorPickerDemo />;
-    // return <ImageUploader storage={this.props.storage} />;
-    // return <SkyEditor />;
     return (
       <div className="App">
         <Controls showEditWorldButton={!this.state.selection} onEditObject={this.editSelectedObject.bind(this)} onAdd={this.addObject.bind(this)} showRotationSwitches={this.state.selection} onMenu={this.showMenu.bind(this)} onEditWorld={this.editWorld.bind(this)}>
