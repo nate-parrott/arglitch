@@ -25,8 +25,7 @@ class DownloaderBrowser : UIViewController, WKNavigationDelegate, UITextFieldDel
     @IBOutlet var downloadDetectedFileButton: UIButton!
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        if navigationAction.navigationType == .linkActivated,
-            let url = navigationAction.request.url,
+        if let url = navigationAction.request.url,
             url.absoluteString.hasSuffix(".zip") {
             decisionHandler(.cancel)
             chose(url: url)
