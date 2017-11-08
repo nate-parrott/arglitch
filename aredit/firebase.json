@@ -8,8 +8,12 @@
     ],
     "rewrites": [
       {
-        "source": "**",
-        "destination": "/index.html"
+            "source": "/bucket/**",
+            "function": "serveBucket"
+      },
+      {
+            "source": "**",
+            "destination": "/index.html"
       }
     ]
   }

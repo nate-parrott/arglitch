@@ -24,6 +24,17 @@ class DownloaderBrowser : UIViewController, WKNavigationDelegate, UITextFieldDel
     @IBOutlet var urlField: UITextField!
     @IBOutlet var downloadDetectedFileButton: UIButton!
     
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        if navigationAction.navigationType == .linkActivated,
+            let url = navigationAction.request.url,
+            url.absoluteString.hasSuffix(".zip") {
+            decisionHandler(.cancel)
+            chose(url: url)
+        } else {
+            decisionHandler(.allow)
+        }
+    }
+    
     @IBAction func cancel() {
         navigationController?.dismiss(animated: true, completion: nil)
         callback?(.cancelled)
@@ -116,31 +127,31 @@ class DownloaderBrowser : UIViewController, WKNavigationDelegate, UITextFieldDel
         if !urlField.isFirstResponder {
             urlField.text = webView.url?.absoluteString ?? ""
         }
-        detectDownloadUrl()
+        // detectDownloadUrl()
     }
     
     // MARK: Helpers
-    
-    func detectDownloadUrl() {
-        let js = """
-        (function() {
-          let results = Array.from(document.querySelectorAll('[jsname]')).map((node) => node.getAttribute('data-value')).filter((v) => v && v.endsWith('.zip') && v.startsWith('https://vr.google.com/downloads/'));
-          return results.length ? results[0] : null;
-        })()
-"""
-        webView.evaluateJavaScript(js) { (result, err) in
-            if let e = err {
-                print("Error detecting model download url: \(e)")
-            } else {
-                if let urlString = result as? String, let url = URL(string: urlString) {
-                    self.detectedDownloadUrl = url
-                } else {
-                    self.detectedDownloadUrl = nil
-                }
-            }
-        }
-    }
-    
+//
+//    func detectDownloadUrl() {
+//        let js = """
+//        (function() {
+//          let results = Array.from(document.querySelectorAll('[jsname]')).map((node) => node.getAttribute('data-value')).filter((v) => v && v.endsWith('.zip') && v.startsWith('https://vr.google.com/downloads/'));
+//          return results.length ? results[0] : null;
+//        })()
+//"""
+//        webView.evaluateJavaScript(js) { (result, err) in
+//            if let e = err {
+//                print("Error detecting model download url: \(e)")
+//            } else {
+//                if let urlString = result as? String, let url = URL(string: urlString) {
+//                    self.detectedDownloadUrl = url
+//                } else {
+//                    self.detectedDownloadUrl = nil
+//                }
+//            }
+//        }
+//    }
+//
     func createURL(from string: String) -> URL? {
         if string.contains(" ") || !string.contains(".") {
             var comps = URLComponents(string: "https://google.com/search?q=X")!

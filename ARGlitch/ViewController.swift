@@ -10,7 +10,7 @@ import UIKit
 import WebKit
 import ARKit
 
-class ViewController: UIViewController, ARSessionDelegate, WKScriptMessageHandler {
+class ViewController: UIViewController, ARSessionDelegate, WKScriptMessageHandler, WKNavigationDelegate {
     var webView: WKWebView!
     let session = ARSession()
     
@@ -23,6 +23,7 @@ class ViewController: UIViewController, ARSessionDelegate, WKScriptMessageHandle
         conf.userContentController = contentController
         webView = WKWebView(frame: .zero, configuration: conf)
         webView.customUserAgent = "ARGlitch-!ARKit!"
+        webView.navigationDelegate = self
         view.insertSubview(webView, at: 0)
         reload()
         session.delegate = self
@@ -41,6 +42,13 @@ class ViewController: UIViewController, ARSessionDelegate, WKScriptMessageHandle
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return UIInterfaceOrientationMask.portrait
+    }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        if let url = navigationAction.request.url {
+            print("URL: \(url)")
+        }
+        decisionHandler(.allow)
     }
     
     func session(_ session: ARSession, didUpdate frame: ARFrame) {

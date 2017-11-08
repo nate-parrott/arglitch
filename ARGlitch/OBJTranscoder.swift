@@ -132,12 +132,15 @@ class OBJTranscoderSession {
     func upload(ref: StorageReference, data: Data, callback: @escaping (URL?) -> ()) {
         print(" uploading data to \(ref)")
         ref.putData(data, metadata: nil) { (metadataOpt: StorageMetadata?, _) in
-            if let dl = metadataOpt?.downloadURL() {
-                print("  download url: \(dl)")
+            if metadataOpt?.downloadURL() != nil {
+                // fuck the existing download urls -- use our mirrored ones, which preserve the slash in paths:
+                let downloadUrl = "https://us-central1-ar-edit.cloudfunctions.net/serveBucket/" + ref.fullPath
+                print("  download url: \(downloadUrl)")
+                callback(URL(string: downloadUrl)!)
             } else {
                 print("  download failed")
+                callback(nil)
             }
-            callback(metadataOpt?.downloadURL())
         }
     }
     
